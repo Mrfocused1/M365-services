@@ -127,7 +127,7 @@ export default function AboutPreview() {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              className="bg-white rounded-2xl p-5 md:p-8 text-center border-4 border-brand-sky hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="bg-white rounded-2xl p-5 md:p-8 text-center border-2 border-brand-sky hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
               <div className="font-poppins text-3xl md:text-5xl font-bold mb-2 text-brand-sky">
                 <Counter value={stat.value} suffix={stat.suffix} decimals={stat.decimals} />
