@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
@@ -20,8 +21,13 @@ export default function Footer() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="flex flex-col items-start">
             <div className="mb-4">
-              <span className="font-poppins font-bold text-xl">M365 IT SERVICES</span>
-              <p className="text-xs text-gray-600 mt-1">Experts in Microsoft 365 for SMEs</p>
+              <Image
+                src="/Logo.svg"
+                alt="M365 IT Services"
+                width={180}
+                height={55}
+                className="h-10 w-auto"
+              />
             </div>
             <p className="text-gray-600 text-sm">
               Empowering businesses through Microsoft 365

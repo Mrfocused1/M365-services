@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 
@@ -37,13 +38,15 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            <Link href="/" className="flex flex-col items-start">
-              <span className="font-bold text-xl text-black">
-                M365 IT SERVICES
-              </span>
-              <span className="text-xs text-gray-600 font-medium mt-0.5">
-                Experts in Microsoft 365 for SMEs
-              </span>
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/Logo.svg"
+                alt="M365 IT Services"
+                width={200}
+                height={60}
+                priority
+                className="h-12 w-auto"
+              />
             </Link>
           </motion.div>
 
