@@ -89,12 +89,12 @@ export default function AboutPreview() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
-          <h2 className="font-poppins text-4xl md:text-5xl font-bold text-black mb-6">
+          <h2 className="font-poppins text-2xl md:text-4xl lg:text-5xl font-bold text-black mb-4 md:mb-6">
             Your Perfect IT M365 Partner
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
             We help small and medium-sized businesses transform the way they work by making technology simple, secure, and productive.
           </p>
         </motion.div>
@@ -119,7 +119,7 @@ export default function AboutPreview() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12"
+          className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-12"
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -127,12 +127,12 @@ export default function AboutPreview() {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-              className="bg-white rounded-2xl p-8 text-center border-4 border-brand-sky hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="bg-white rounded-2xl p-5 md:p-8 text-center border-4 border-brand-sky hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
-              <div className="font-poppins text-5xl font-bold mb-2 text-brand-sky">
+              <div className="font-poppins text-3xl md:text-5xl font-bold mb-2 text-brand-sky">
                 <Counter value={stat.value} suffix={stat.suffix} decimals={stat.decimals} />
               </div>
-              <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+              <div className="text-xs md:text-sm text-gray-600 font-medium">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>
@@ -144,18 +144,18 @@ export default function AboutPreview() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-center"
         >
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-8 md:p-12 border border-white/40 inline-block"
+          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-5 md:p-8 lg:p-12 border border-white/40 inline-block"
             style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}>
-            <p className="text-lg text-gray-600 mb-6 max-w-2xl">
+            <p className="text-sm md:text-base lg:text-lg text-gray-600 mb-5 md:mb-6 max-w-2xl">
               From moving your emails and files to the cloud, to securing your business from cyber threats — we handle it all so you can focus on running your business, not your IT.
             </p>
             <Link
               href="/about"
-              className="inline-block bg-white text-brand-sky font-semibold px-8 py-4 rounded-lg border-2 border-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl group"
+              className="inline-block bg-white text-brand-sky font-semibold px-6 md:px-8 py-3 md:py-4 text-sm md:text-base rounded-lg border-2 border-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl group"
             >
               <span className="flex items-center gap-2">
                 Meet the Team
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </span>

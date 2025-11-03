@@ -66,12 +66,12 @@ export default function WhyChoose() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
-          <h2 className="font-poppins text-4xl md:text-5xl font-bold text-black mb-6">
+          <h2 className="font-poppins text-2xl md:text-4xl lg:text-5xl font-bold text-black mb-4 md:mb-6">
             Why choose M365 IT Services for your business?
           </h2>
-          <p className="text-lg text-gray-600 max-w-4xl mx-auto">
+          <p className="text-base md:text-lg text-gray-600 max-w-4xl mx-auto">
             All in one tool — Email, Teams, Office Apps, Storage, Strong Security,
             and Easy Collaboration.
           </p>
@@ -91,13 +91,13 @@ export default function WhyChoose() {
               <img
                 src={benefit.image}
                 alt={benefit.title}
-                className="w-full h-40 object-cover"
+                className="w-full h-32 md:h-40 object-cover"
               />
-              <div className="p-6">
-                <h3 className="font-poppins text-xl font-bold text-black mb-2">
+              <div className="p-4 md:p-6">
+                <h3 className="font-poppins text-lg md:text-xl font-bold text-black mb-2">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-600">{benefit.description}</p>
+                <p className="text-sm md:text-base text-gray-600">{benefit.description}</p>
               </div>
             </motion.div>
           ))}
