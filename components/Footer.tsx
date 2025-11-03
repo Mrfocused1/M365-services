@@ -39,8 +39,8 @@ export default function Footer() {
           >
             <h3 className="font-poppins font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              {['Home', 'Services', 'About Us', 'Contact'].map((item, index) => {
-                const hrefs = { 'Home': '/', 'Services': '/#services', 'About Us': '/about', 'Contact': '/#contact' }
+              {(['Home', 'Services', 'About Us', 'Contact'] as const).map((item, index) => {
+                const hrefs: Record<string, string> = { 'Home': '/', 'Services': '/#services', 'About Us': '/about', 'Contact': '/#contact' }
                 return (
                   <motion.li
                     key={item}
