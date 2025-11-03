@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { motion } from 'framer-motion'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -31,34 +32,49 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex flex-col items-start">
-            <span className="font-bold text-xl text-black">
-              M365 IT SERVICES
-            </span>
-            <span className="text-xs text-gray-600 font-medium mt-0.5">
-              Experts in Microsoft 365 for SMEs
-            </span>
-          </Link>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            <Link href="/" className="flex flex-col items-start">
+              <span className="font-bold text-xl text-black">
+                M365 IT SERVICES
+              </span>
+              <span className="text-xs text-gray-600 font-medium mt-0.5">
+                Experts in Microsoft 365 for SMEs
+              </span>
+            </Link>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
+            {navItems.map((item, index) => (
+              <motion.div
                 key={item.name}
-                href={item.href}
-                className={`text-base font-medium transition-colors hover:text-brand-sky ${
-                  pathname === item.href
-                    ? 'text-brand-sky'
-                    : 'text-black'
-                }`}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 + index * 0.1, ease: "easeOut" }}
               >
-                {item.name}
-              </Link>
+                <Link
+                  href={item.href}
+                  className={`text-base font-medium transition-colors hover:text-brand-sky ${
+                    pathname === item.href
+                      ? 'text-brand-sky'
+                      : 'text-black'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              </motion.div>
             ))}
           </div>
 
           {/* Mobile Menu Button */}
-          <button
+          <motion.button
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="md:hidden p-2"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
@@ -80,27 +96,39 @@ export default function Navbar() {
                 }`}
               ></span>
             </div>
-          </button>
+          </motion.button>
         </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden pb-4 animate-fadeIn">
-            {navItems.map((item) => (
-              <Link
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden pb-4"
+          >
+            {navItems.map((item, index) => (
+              <motion.div
                 key={item.name}
-                href={item.href}
-                className={`block py-3 text-base font-medium transition-colors ${
-                  pathname === item.href
-                    ? 'text-brand-sky'
-                    : 'text-black hover:text-brand-sky'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                {item.name}
-              </Link>
+                <Link
+                  href={item.href}
+                  className={`block py-3 text-base font-medium transition-colors ${
+                    pathname === item.href
+                      ? 'text-brand-sky'
+                      : 'text-black hover:text-brand-sky'
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </nav>

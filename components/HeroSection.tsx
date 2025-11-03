@@ -139,16 +139,24 @@ export default function HeroSection() {
           >
             {!isSubmitted ? (
               <form onSubmit={handleSubmit} className="space-y-3.5">
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.7 }}
+                >
                   <h3 className="text-xl font-bold text-black mb-1">
                     Get In Touch
                   </h3>
                   <p className="text-xs text-gray-600 mb-4">
                     We'll get back to you within 48 hours.
                   </p>
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.8 }}
+                >
                   <label className="block text-xs font-medium text-gray-700 mb-1.5">
                     Your Name
                   </label>
@@ -165,9 +173,13 @@ export default function HeroSection() {
                   {errors.name && (
                     <p className="text-red-500 text-xs mt-1">{errors.name}</p>
                   )}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.9 }}
+                >
                   <label className="block text-xs font-medium text-gray-700 mb-1.5">
                     Email Address
                   </label>
@@ -184,9 +196,13 @@ export default function HeroSection() {
                   {errors.email && (
                     <p className="text-red-500 text-xs mt-1">{errors.email}</p>
                   )}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 1.0 }}
+                >
                   <label className="block text-xs font-medium text-gray-700 mb-1.5">
                     Your Message
                   </label>
@@ -203,16 +219,19 @@ export default function HeroSection() {
                   {errors.message && (
                     <p className="text-red-500 text-xs mt-1">{errors.message}</p>
                   )}
-                </div>
+                </motion.div>
 
                 {!showExtraFields && (
-                  <button
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 1.1 }}
                     type="button"
                     onClick={() => setShowExtraFields(true)}
                     className="text-brand-sky text-xs font-medium hover:underline"
                   >
                     + Add company & phone details
-                  </button>
+                  </motion.button>
                 )}
 
                 {showExtraFields && (
@@ -257,7 +276,10 @@ export default function HeroSection() {
                   </motion.div>
                 )}
 
-                <button
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 1.2 }}
                   type="submit"
                   className="w-full bg-gradient-to-r from-brand-sky to-blue-600 text-white font-semibold py-3 text-sm rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl relative overflow-hidden group"
                 >
@@ -268,11 +290,15 @@ export default function HeroSection() {
                     </svg>
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                </button>
+                </motion.button>
 
-                <p className="text-[10px] text-center text-gray-500 mt-2">
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 1.3 }}
+                  className="text-[10px] text-center text-gray-500 mt-2">
                   We respect your privacy. Your information is secure with us.
-                </p>
+                </motion.p>
               </form>
             ) : (
               <motion.div
@@ -339,9 +365,13 @@ export default function HeroSection() {
                   {errors.name && (
                     <p className="text-red-500 text-xs mt-1">{errors.name}</p>
                   )}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.9 }}
+                >
                   <label className="block text-xs font-medium text-gray-700 mb-1.5">
                     Email Address
                   </label>
@@ -358,9 +388,13 @@ export default function HeroSection() {
                   {errors.email && (
                     <p className="text-red-500 text-xs mt-1">{errors.email}</p>
                   )}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 1.0 }}
+                >
                   <label className="block text-xs font-medium text-gray-700 mb-1.5">
                     Your Message
                   </label>
@@ -377,16 +411,19 @@ export default function HeroSection() {
                   {errors.message && (
                     <p className="text-red-500 text-xs mt-1">{errors.message}</p>
                   )}
-                </div>
+                </motion.div>
 
                 {!showExtraFields && (
-                  <button
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 1.1 }}
                     type="button"
                     onClick={() => setShowExtraFields(true)}
                     className="text-brand-sky text-xs font-medium hover:underline"
                   >
                     + Add company & phone details
-                  </button>
+                  </motion.button>
                 )}
 
                 {showExtraFields && (
@@ -431,7 +468,10 @@ export default function HeroSection() {
                   </motion.div>
                 )}
 
-                <button
+                <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 1.2 }}
                   type="submit"
                   className="w-full bg-gradient-to-r from-brand-sky to-blue-600 text-white font-semibold py-3 text-sm rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl relative overflow-hidden group"
                 >
@@ -442,11 +482,15 @@ export default function HeroSection() {
                     </svg>
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                </button>
+                </motion.button>
 
-                <p className="text-[10px] text-center text-gray-500 mt-2">
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 1.3 }}
+                  className="text-[10px] text-center text-gray-500 mt-2">
                   We respect your privacy. Your information is secure with us.
-                </p>
+                </motion.p>
               </form>
             ) : (
               <motion.div
