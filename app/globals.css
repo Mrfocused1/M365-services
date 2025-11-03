@@ -22,7 +22,7 @@ body {
 
 @layer utilities {
   .section-spacing {
-    @apply py-20 lg:py-20;
+    @apply py-10 lg:py-20;
   }
 
   .section-spacing-mobile {
