@@ -109,7 +109,7 @@ export default function WhyChoose() {
         title="What Our Clients Say"
         description="Trusted by businesses across the UK"
         testimonials={testimonials}
-        className="mt-20"
+        className="mt-10 md:mt-20"
       />
     </section>
   )

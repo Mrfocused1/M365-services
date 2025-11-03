@@ -23,10 +23,10 @@ export function TestimonialsSection({
   return (
     <section className={cn(
       "bg-white text-black",
-      "py-12 sm:py-16 px-0",
+      "py-8 md:py-12 lg:py-16 px-0",
       className
     )}>
-      <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 sm:gap-16">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 md:gap-8 lg:gap-16">
         <div className="flex flex-col items-center gap-3 md:gap-4 px-4 sm:gap-6">
           <h2 className="max-w-[720px] text-2xl font-poppins font-bold leading-tight text-center md:text-4xl lg:text-5xl sm:leading-tight">
             {title}
@@ -36,7 +36,7 @@ export function TestimonialsSection({
           </p>
         </div>
 
-        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden py-8">
+        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden py-4 md:py-8">
           <div className="flex gap-4 overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]">
             <div className="flex shrink-0 gap-4 animate-marquee group-hover:[animation-play-state:paused]">
               {testimonials.map((testimonial, i) => (
