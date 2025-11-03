@@ -85,19 +85,20 @@ export default function WhyChoose() {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="text-center rounded-2xl bg-white/80 backdrop-blur-xl border border-white/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)] overflow-hidden w-full max-w-sm sm:max-w-none"
-              style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)' }}
+              className="relative rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_60px_rgba(0,0,0,0.25)] overflow-hidden w-full max-w-sm sm:max-w-none h-48 md:h-56"
+              style={{ boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.15)' }}
             >
               <img
                 src={benefit.image}
                 alt={benefit.title}
-                className="w-full h-32 md:h-40 object-cover"
+                className="w-full h-full object-cover"
               />
-              <div className="p-4 md:p-6">
-                <h3 className="font-poppins text-lg md:text-xl font-bold text-black mb-2">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 text-left">
+                <h3 className="font-poppins text-xl md:text-2xl font-bold text-white mb-2">
                   {benefit.title}
                 </h3>
-                <p className="text-sm md:text-base text-gray-600">{benefit.description}</p>
+                <p className="text-sm md:text-base text-white/90">{benefit.description}</p>
               </div>
             </motion.div>
           ))}
