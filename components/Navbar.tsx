@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 
@@ -39,12 +38,9 @@ export default function Navbar() {
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
             <Link href="/" className="flex items-center">
-              <Image
+              <img
                 src="/Logo.svg"
                 alt="M365 IT Services"
-                width={200}
-                height={60}
-                priority
                 className="h-12 w-auto"
               />
             </Link>
