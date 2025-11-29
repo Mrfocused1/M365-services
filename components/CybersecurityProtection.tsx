@@ -18,10 +18,44 @@ const iconMap: Record<string, any> = {
   FileCheck
 }
 
+// Default fallback services for build time
+const defaultServices: CybersecurityService[] = [
+  {
+    id: '1',
+    title: '24/7 Threat Detection & Rapid Response',
+    description: '24/7 threat detection and rapid response to cyber incidents via MS Defender',
+    icon_name: 'Shield',
+    position: 1,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: '2',
+    title: 'Advanced Email Protection',
+    description: 'Advanced email protection against phishing and spam.',
+    icon_name: 'Mail',
+    position: 2,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: '3',
+    title: 'Staff Training',
+    description: 'Staff training to stop attacks before they happen.',
+    icon_name: 'GraduationCap',
+    position: 3,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
+]
+
 export default function CybersecurityProtection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
-  const [protectionServices, setProtectionServices] = useState<CybersecurityService[]>([])
+  const [protectionServices, setProtectionServices] = useState<CybersecurityService[]>(defaultServices)
 
   useEffect(() => {
     fetchServices()
@@ -36,9 +70,12 @@ export default function CybersecurityProtection() {
         .order('position', { ascending: true })
 
       if (error) throw error
-      setProtectionServices(data || [])
+      if (data && data.length > 0) {
+        setProtectionServices(data)
+      }
     } catch (error) {
       console.error('Error fetching cybersecurity services:', error)
+      // Keep using defaultServices on error
     }
   }
 

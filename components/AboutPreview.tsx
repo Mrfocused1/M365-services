@@ -54,10 +54,58 @@ const iconMap: Record<string, any> = {
   Zap
 }
 
+// Default fallback features for build time
+const defaultFeatures: M365Feature[] = [
+  {
+    id: '1',
+    title: 'Seamless Migration',
+    description: 'Move emails, files, and data from your old systems to Microsoft 365. Done in a way that avoids downtime, so your business keeps running.',
+    icon_name: 'Cloud',
+    image_url: '/cloud.jpeg',
+    position: 1,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: '2',
+    title: 'M365 Setup & Domain Verification',
+    description: 'Set up Microsoft 365 accounts for your team. Connect and verify your business domain (so your email looks professional, e.g. yourname@yourcompany.com).',
+    icon_name: 'Shield',
+    image_url: '/support.jpeg',
+    position: 2,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: '3',
+    title: 'Teams, SharePoint & OneDrive Setup',
+    description: 'Configure Teams for chat, calls, and meetings. Set up SharePoint for document sharing and team sites. Configure OneDrive for personal file storage and access from anywhere.',
+    icon_name: 'Headphones',
+    image_url: '/training.jpeg',
+    position: 3,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: '4',
+    title: 'Security & Compliance',
+    description: 'Apply Microsoft 365 security features (MFA, threat protection, encryption). Configure compliance settings to meet regulations (GDPR-ready). Protects your data and builds customer trust.',
+    icon_name: 'Shield',
+    image_url: '/security.jpeg',
+    position: 4,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
+]
+
 export default function AboutPreview() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
-  const [features, setFeatures] = useState<M365Feature[]>([])
+  const [features, setFeatures] = useState<M365Feature[]>(defaultFeatures)
 
   useEffect(() => {
     fetchFeatures()
@@ -72,9 +120,12 @@ export default function AboutPreview() {
         .order('position', { ascending: true })
 
       if (error) throw error
-      setFeatures(data || [])
+      if (data && data.length > 0) {
+        setFeatures(data)
+      }
     } catch (error) {
       console.error('Error fetching M365 features:', error)
+      // Keep using defaultFeatures on error
     }
   }
 

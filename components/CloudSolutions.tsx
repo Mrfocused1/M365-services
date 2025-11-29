@@ -20,11 +20,45 @@ const iconMap: Record<string, any> = {
   Database
 }
 
+// Default fallback solutions for build time
+const defaultSolutions: CloudSolution[] = [
+  {
+    id: '1',
+    title: 'Secure Backups & Disaster Recovery',
+    description: 'Use Microsoft 365 Backup to keep business data safe. Quick recovery options in case of data loss or system failure.',
+    icon_name: 'Cloud',
+    position: 1,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: '2',
+    title: 'Remote & Secure Access',
+    description: 'Enable staff to work from anywhere. Protected sign-ins and secure connections for remote work.',
+    icon_name: 'Lock',
+    position: 2,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  },
+  {
+    id: '3',
+    title: 'Endpoint Deployment & Management (via Intune)',
+    description: 'Install and manage business apps across all company devices. Keep devices updated and secure from a single dashboard.',
+    icon_name: 'Smartphone',
+    position: 3,
+    is_active: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  }
+]
+
 export default function CloudSolutions() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [openIndex, setOpenIndex] = useState<number | null>(0)
-  const [solutions, setSolutions] = useState<CloudSolution[]>([])
+  const [solutions, setSolutions] = useState<CloudSolution[]>(defaultSolutions)
 
   useEffect(() => {
     fetchSolutions()
@@ -39,9 +73,12 @@ export default function CloudSolutions() {
         .order('position', { ascending: true })
 
       if (error) throw error
-      setSolutions(data || [])
+      if (data && data.length > 0) {
+        setSolutions(data)
+      }
     } catch (error) {
       console.error('Error fetching cloud solutions:', error)
+      // Keep using defaultSolutions on error
     }
   }
 
