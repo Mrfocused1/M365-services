@@ -110,7 +110,7 @@ Best regards,
 ${formData.name}`
 
         // Create mailto link
-        const mailtoLink = `mailto:info@m365itservices.com?subject=Contact Form Submission from ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`
+        const mailtoLink = `mailto:itinfo@365pundits.com?subject=Contact Form Submission from ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`
 
         // Open user's email client
         window.location.href = mailtoLink
