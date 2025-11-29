@@ -73,7 +73,7 @@ export default function HeroSection() {
 
       try {
         // Save to Supabase
-        const { error } = await supabase
+        const { error: dbError } = await supabase
           .from('form_submissions')
           .insert({
             full_name: formData.name,
@@ -83,7 +83,26 @@ export default function HeroSection() {
             is_read: false
           })
 
-        if (error) throw error
+        if (dbError) throw dbError
+
+        // Send email notification
+        const emailResponse = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            company: formData.company,
+            message: formData.message,
+          }),
+        })
+
+        if (!emailResponse.ok) {
+          console.error('Email send failed, but form was saved to database')
+        }
 
         setIsSubmitted(true)
 
