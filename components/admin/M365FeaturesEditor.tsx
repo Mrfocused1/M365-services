@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { M365Feature } from '@/lib/supabase'
 import { Save, Loader2, Plus, Trash2, GripVertical, X } from 'lucide-react'
+import ImageUpload from './ImageUpload'
 
 export default function M365FeaturesEditor() {
   const [features, setFeatures] = useState<M365Feature[]>([])
@@ -301,19 +302,12 @@ function FeatureModal({
             </select>
           </div>
 
-          <div>
-            <label htmlFor="image_url" className="block text-sm font-medium text-gray-700 mb-2">
-              Image URL
-            </label>
-            <input
-              type="text"
-              id="image_url"
-              value={formData.image_url}
-              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-sky focus:border-transparent"
-              placeholder="/cloud.jpeg"
-            />
-          </div>
+          <ImageUpload
+            label="Feature Image"
+            value={formData.image_url}
+            onChange={(url) => setFormData({ ...formData, image_url: url })}
+            accept="image/*"
+          />
         </div>
 
         <div className="p-4 md:p-6 border-t border-gray-200 flex flex-col sm:flex-row gap-3 justify-end sticky bottom-0 bg-white">

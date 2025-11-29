@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { Benefit } from '@/lib/supabase'
 import { Save, Loader2, Plus, Trash2, X } from 'lucide-react'
+import ImageUpload from './ImageUpload'
 
 export default function BenefitsEditor() {
   const [benefits, setBenefits] = useState<Benefit[]>([])
@@ -131,10 +132,12 @@ function BenefitModal({ benefit, onSave, onClose, saving }: { benefit: Benefit |
             <label className="block text-sm font-medium mb-2">Description *</label>
             <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-4 py-3 border rounded-lg" placeholder="Pay only for what you need..." required />
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Image URL</label>
-            <input type="text" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} className="w-full px-4 py-3 border rounded-lg" placeholder="/scalability.jpeg" />
-          </div>
+          <ImageUpload
+            label="Benefit Image"
+            value={form.image_url}
+            onChange={(url) => setForm({ ...form, image_url: url })}
+            accept="image/*"
+          />
         </div>
         <div className="p-6 border-t flex gap-3 justify-end">
           <button onClick={onClose} disabled={saving} className="px-6 py-3 border rounded-lg hover:bg-gray-50">Cancel</button>

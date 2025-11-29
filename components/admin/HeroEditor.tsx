@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { HeroContent } from '@/lib/supabase'
 import { Save, Loader2 } from 'lucide-react'
+import ImageUpload from './ImageUpload'
 
 export default function HeroEditor() {
   const [heroContent, setHeroContent] = useState<HeroContent | null>(null)
@@ -124,21 +125,12 @@ export default function HeroEditor() {
           />
         </div>
 
-        <div>
-          <label htmlFor="video_url" className="block text-sm font-medium text-gray-700 mb-2">
-            Background Video URL
-          </label>
-          <input
-            type="text"
-            id="video_url"
-            value={heroContent.video_url || ''}
-            onChange={(e) => setHeroContent({ ...heroContent, video_url: e.target.value })}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-sky focus:border-transparent"
-            placeholder="/video.mp4"
-          />
-          <p className="mt-2 text-sm text-gray-600">Path to the background video file</p>
-        </div>
-
+        <ImageUpload
+          label="Background Video"
+          value={heroContent.video_url || ''}
+          onChange={(url) => setHeroContent({ ...heroContent, video_url: url })}
+          accept="video/*"
+        />
         <div>
           <label htmlFor="cta_text" className="block text-sm font-medium text-gray-700 mb-2">
             Call-to-Action Button Text
