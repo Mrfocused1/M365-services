@@ -2,62 +2,123 @@
 
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { TestimonialsSection } from './ui/testimonials-section'
+import { supabase } from '@/lib/supabase'
+import type { Benefit, Testimonial } from '@/lib/supabase'
+
+// Default fallback data
+const defaultBenefits = [
+  {
+    title: 'Scalability',
+    description: 'Pay only for what you need and grow later',
+    image: '/scalability.jpeg',
+  },
+  {
+    title: 'Secure',
+    description: 'Enterprise-grade security for your business',
+    image: '/secure.jpeg',
+  },
+  {
+    title: 'Cost-Effective',
+    description: 'Reduce IT costs with cloud solutions',
+    image: '/cost.jpeg',
+  },
+  {
+    title: 'Productivity-Boosting',
+    description: 'Empower your team to work smarter',
+    image: '/productivity.jpeg',
+  },
+]
+
+const defaultTestimonials = [
+  {
+    author: {
+      name: 'Sarah L.',
+      role: 'Operations Director',
+      company: 'London Design Co.',
+    },
+    text: 'M365 IT Services completely transformed how our remote team works — fast, secure, and seamless!',
+  },
+  {
+    author: {
+      name: 'James T.',
+      role: 'CEO',
+      company: 'TechStart Solutions',
+    },
+    text: 'Their expertise in Microsoft 365 helped us scale efficiently without the IT headaches. Highly recommended!',
+  },
+  {
+    author: {
+      name: 'Emma R.',
+      role: 'Managing Partner',
+      company: 'Brighton Consultancy',
+    },
+    text: 'Finally, an IT partner that understands SMBs. Professional, responsive, and cost-effective.',
+  },
+]
 
 export default function WhyChoose() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [benefits, setBenefits] = useState(defaultBenefits)
+  const [testimonials, setTestimonials] = useState(defaultTestimonials)
+  const [showTestimonials, setShowTestimonials] = useState(true)
 
-  const benefits = [
-    {
-      title: 'Scalability',
-      description: 'Pay only for what you need and grow later',
-      image: '/scalability.jpeg',
-    },
-    {
-      title: 'Secure',
-      description: 'Enterprise-grade security for your business',
-      image: '/secure.jpeg',
-    },
-    {
-      title: 'Cost-Effective',
-      description: 'Reduce IT costs with cloud solutions',
-      image: '/cost.jpeg',
-    },
-    {
-      title: 'Productivity-Boosting',
-      description: 'Empower your team to work smarter',
-      image: '/productivity.jpeg',
-    },
-  ]
+  useEffect(() => {
+    fetchData()
+  }, [])
 
-  const testimonials = [
-    {
-      author: {
-        name: 'Sarah L.',
-        role: 'Operations Director',
-        company: 'London Design Co.',
-      },
-      text: 'M365 IT Services completely transformed how our remote team works — fast, secure, and seamless!',
-    },
-    {
-      author: {
-        name: 'James T.',
-        role: 'CEO',
-        company: 'TechStart Solutions',
-      },
-      text: 'Their expertise in Microsoft 365 helped us scale efficiently without the IT headaches. Highly recommended!',
-    },
-    {
-      author: {
-        name: 'Emma R.',
-        role: 'Managing Partner',
-        company: 'Brighton Consultancy',
-      },
-      text: 'Finally, an IT partner that understands SMBs. Professional, responsive, and cost-effective.',
-    },
-  ]
+  async function fetchData() {
+    try {
+      // Fetch benefits
+      const { data: benefitsData, error: benefitsError } = await supabase
+        .from('benefits')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true })
+
+      if (!benefitsError && benefitsData && benefitsData.length > 0) {
+        setBenefits(benefitsData.map(b => ({
+          title: b.title,
+          description: b.description,
+          image: b.image_url || '/scalability.jpeg'
+        })))
+      }
+
+      // Fetch testimonials
+      const { data: testimonialsData, error: testimonialsError } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true })
+
+      if (!testimonialsError && testimonialsData && testimonialsData.length > 0) {
+        setTestimonials(testimonialsData.map(t => ({
+          author: {
+            name: t.author_name,
+            role: t.author_role,
+            company: t.author_company
+          },
+          text: t.text
+        })))
+      }
+
+      // Check if testimonials section should be visible
+      // We'll store this in a settings table or use a simple flag
+      const { data: settingsData } = await supabase
+        .from('site_settings')
+        .select('show_testimonials')
+        .single()
+
+      if (settingsData) {
+        setShowTestimonials(settingsData.show_testimonials ?? true)
+      }
+    } catch (error) {
+      console.error('Error fetching Why Choose data:', error)
+      // Keep using defaults
+    }
+  }
 
   return (
     <section ref={ref} className="section-spacing bg-white">
@@ -105,13 +166,15 @@ export default function WhyChoose() {
         </div>
       </div>
 
-      {/* Testimonials Marquee Section */}
-      <TestimonialsSection
-        title="What Our Clients Say"
-        description="Trusted by businesses across the UK"
-        testimonials={testimonials}
-        className="mt-10 md:mt-20"
-      />
+      {/* Testimonials Marquee Section - Conditionally Rendered */}
+      {showTestimonials && testimonials.length > 0 && (
+        <TestimonialsSection
+          title="What Our Clients Say"
+          description="Trusted by businesses across the UK"
+          testimonials={testimonials}
+          className="mt-10 md:mt-20"
+        />
+      )}
     </section>
   )
 }
