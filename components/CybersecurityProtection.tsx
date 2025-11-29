@@ -2,30 +2,45 @@
 
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { Shield, Mail, GraduationCap } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { Shield, Mail, GraduationCap, Lock, Eye, AlertTriangle, FileCheck } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import type { CybersecurityService } from '@/lib/supabase'
+
+// Icon map to convert string names to components
+const iconMap: Record<string, any> = {
+  Shield,
+  Mail,
+  GraduationCap,
+  Lock,
+  Eye,
+  AlertTriangle,
+  FileCheck
+}
 
 export default function CybersecurityProtection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [protectionServices, setProtectionServices] = useState<CybersecurityService[]>([])
 
-  const protectionServices = [
-    {
-      icon: Shield,
-      title: '24/7 Threat Detection & Rapid Response',
-      description: '24/7 threat detection and rapid response to cyber incidents via MS Defender',
-    },
-    {
-      icon: Mail,
-      title: 'Advanced Email Protection',
-      description: 'Advanced email protection against phishing and spam.',
-    },
-    {
-      icon: GraduationCap,
-      title: 'Staff Training',
-      description: 'Staff training to stop attacks before they happen.',
-    },
-  ]
+  useEffect(() => {
+    fetchServices()
+  }, [])
+
+  async function fetchServices() {
+    try {
+      const { data, error} = await supabase
+        .from('cybersecurity_services')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true })
+
+      if (error) throw error
+      setProtectionServices(data || [])
+    } catch (error) {
+      console.error('Error fetching cybersecurity services:', error)
+    }
+  }
 
   return (
     <section ref={ref} className="section-spacing bg-brand-sky relative overflow-hidden">
@@ -46,7 +61,7 @@ export default function CybersecurityProtection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {protectionServices.map((service, index) => {
-            const Icon = service.icon
+            const Icon = iconMap[service.icon_name] || Shield
 
             return (
               <motion.div

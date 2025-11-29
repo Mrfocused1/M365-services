@@ -2,51 +2,48 @@
 
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef, useState } from 'react'
-import { ChevronDown, Shield, Cloud, Smartphone, Mail, Lock, Phone, Key } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { ChevronDown, Shield, Cloud, Smartphone, Mail, Lock, Phone, Key, Server, Database } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import type { CloudSolution } from '@/lib/supabase'
+
+// Icon map to convert string names to components
+const iconMap: Record<string, any> = {
+  Cloud,
+  Lock,
+  Smartphone,
+  Mail,
+  Shield,
+  Phone,
+  Key,
+  Server,
+  Database
+}
 
 export default function CloudSolutions() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [openIndex, setOpenIndex] = useState<number | null>(0)
+  const [solutions, setSolutions] = useState<CloudSolution[]>([])
 
-  const solutions = [
-    {
-      icon: Cloud,
-      title: 'Secure Backups & Disaster Recovery',
-      description: 'Use Microsoft 365 Backup to keep business data safe. Quick recovery options in case of data loss or system failure.',
-    },
-    {
-      icon: Lock,
-      title: 'Remote & Secure Access',
-      description: 'Enable staff to work from anywhere. Protected sign-ins and secure connections for remote work.',
-    },
-    {
-      icon: Smartphone,
-      title: 'Endpoint Deployment & Management (via Intune)',
-      description: 'Install and manage business apps across all company devices. Keep devices updated and secure from a single dashboard.',
-    },
-    {
-      icon: Mail,
-      title: 'Email Security & Collaboration',
-      description: 'Apply Defender 365 email policies. Reduce phishing, spam, and malware risks. Ensure safe, reliable business communication.',
-    },
-    {
-      icon: Shield,
-      title: 'Endpoint Cybersecurity (via Defender for Endpoint)',
-      description: 'Protect laptops, PCs, and mobile devices from cyber threats. Monitor and respond quickly to security issues.',
-    },
-    {
-      icon: Phone,
-      title: 'Microsoft Teams Telephony',
-      description: 'Set up Auto Attendants (virtual receptionists) and Call Queues (direct calls to the right team). Implement Teams Calling Plans or Operator Connect for business phone systems.',
-    },
-    {
-      icon: Key,
-      title: 'Single Sign-On (SSO) for External Apps',
-      description: 'One login for Microsoft 365 and external services. Simplifies access for users and boosts security.',
-    },
-  ]
+  useEffect(() => {
+    fetchSolutions()
+  }, [])
+
+  async function fetchSolutions() {
+    try {
+      const { data, error } = await supabase
+        .from('cloud_solutions')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true })
+
+      if (error) throw error
+      setSolutions(data || [])
+    } catch (error) {
+      console.error('Error fetching cloud solutions:', error)
+    }
+  }
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index)
@@ -73,7 +70,7 @@ export default function CloudSolutions() {
         {/* Accordion */}
         <div className="max-w-4xl mx-auto space-y-4">
           {solutions.map((solution, index) => {
-            const Icon = solution.icon
+            const Icon = iconMap[solution.icon_name] || Cloud
             const isOpen = openIndex === index
 
             return (

@@ -5,7 +5,9 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import Link from 'next/link'
 import { Features } from './ui/features'
-import { Headphones, Cloud, Shield } from 'lucide-react'
+import { Headphones, Cloud, Shield, Server, Lock, Users, Settings, Zap } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
+import type { M365Feature } from '@/lib/supabase'
 
 function Counter({ value, suffix = '', decimals = 0 }: { value: number; suffix?: string; decimals?: number }) {
   const [displayValue, setDisplayValue] = useState(0)
@@ -40,40 +42,41 @@ function Counter({ value, suffix = '', decimals = 0 }: { value: number; suffix?:
   )
 }
 
+// Icon map to convert string names to components
+const iconMap: Record<string, any> = {
+  Cloud,
+  Shield,
+  Headphones,
+  Server,
+  Lock,
+  Users,
+  Settings,
+  Zap
+}
+
 export default function AboutPreview() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [features, setFeatures] = useState<M365Feature[]>([])
 
-  const features = [
-    {
-      id: 1,
-      icon: Cloud,
-      title: 'Seamless Migration',
-      description: 'Move emails, files, and data from your old systems to Microsoft 365. Done in a way that avoids downtime, so your business keeps running.',
-      image: '/cloud.jpeg'
-    },
-    {
-      id: 2,
-      icon: Shield,
-      title: 'M365 Setup & Domain Verification',
-      description: 'Set up Microsoft 365 accounts for your team. Connect and verify your business domain (so your email looks professional, e.g. yourname@yourcompany.com).',
-      image: '/support.jpeg'
-    },
-    {
-      id: 3,
-      icon: Headphones,
-      title: 'Teams, SharePoint & OneDrive Setup',
-      description: 'Configure Teams for chat, calls, and meetings. Set up SharePoint for document sharing and team sites. Configure OneDrive for personal file storage and access from anywhere.',
-      image: '/training.jpeg'
-    },
-    {
-      id: 4,
-      icon: Shield,
-      title: 'Security & Compliance',
-      description: 'Apply Microsoft 365 security features (MFA, threat protection, encryption). Configure compliance settings to meet regulations (GDPR-ready). Protects your data and builds customer trust.',
-      image: '/security.jpeg'
-    },
-  ]
+  useEffect(() => {
+    fetchFeatures()
+  }, [])
+
+  async function fetchFeatures() {
+    try {
+      const { data, error } = await supabase
+        .from('m365_features')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true })
+
+      if (error) throw error
+      setFeatures(data || [])
+    } catch (error) {
+      console.error('Error fetching M365 features:', error)
+    }
+  }
 
   const stats = [
     { value: 150, suffix: '+', label: 'Happy Clients', decimals: 0 },
@@ -107,7 +110,13 @@ export default function AboutPreview() {
           className="mb-16"
         >
           <Features
-            features={features}
+            features={features.map(feature => ({
+              id: parseInt(feature.id),
+              icon: iconMap[feature.icon_name] || Cloud,
+              title: feature.title,
+              description: feature.description,
+              image: feature.image_url || '/cloud.jpeg'
+            }))}
             primaryColor="bg-sky-500"
             progressGradientLight="bg-gradient-to-r from-sky-500 to-blue-600"
             progressGradientDark="bg-gradient-to-r from-sky-400 to-blue-500"
