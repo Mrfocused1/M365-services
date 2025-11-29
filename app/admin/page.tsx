@@ -24,6 +24,8 @@ import CloudSolutionsEditor from '@/components/admin/CloudSolutionsEditor'
 import CybersecurityEditor from '@/components/admin/CybersecurityEditor'
 import FormSubmissionsViewer from '@/components/admin/FormSubmissionsViewer'
 import WhyChooseEditor from '@/components/admin/WhyChooseEditor'
+import NavigationEditor from '@/components/admin/NavigationEditor'
+import FooterEditor from '@/components/admin/FooterEditor'
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState('dashboard')
@@ -144,17 +146,32 @@ export default function AdminDashboard() {
           >
             {activeSection === 'dashboard' && <DashboardOverview />}
             {activeSection === 'hero' && <HeroEditor />}
-            {activeSection === 'navigation' && <div>Navigation Menu Editor (Coming Soon)</div>}
+            {activeSection === 'navigation' && <NavigationEditor />}
             {activeSection === 'm365-features' && <M365FeaturesEditor />}
             {activeSection === 'cloud-solutions' && <CloudSolutionsEditor />}
             {activeSection === 'cybersecurity' && <CybersecurityEditor />}
             {activeSection === 'why-choose' && <WhyChooseEditor />}
             {activeSection === 'contact-info' && <ContactInfoEditor />}
             {activeSection === 'form-submissions' && <FormSubmissionsViewer />}
-            {activeSection === 'media' && <div>Media Library (Coming Soon)</div>}
-            {activeSection === 'footer' && <div>Footer Editor (Coming Soon)</div>}
+            {activeSection === 'media' && <MediaLibrary />}
+            {activeSection === 'footer' && <FooterEditor />}
           </motion.div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function MediaLibrary() {
+  return (
+    <div>
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Media Library</h2>
+      <p className="text-gray-600 mb-6">Upload and manage images and videos for your website.</p>
+      <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+        <Image className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Media Library Coming Soon</h3>
+        <p className="text-gray-600 mb-4">Upload and manage images, videos, and other media files.</p>
+        <p className="text-sm text-gray-500">For now, you can reference images by URL in other editors.</p>
       </div>
     </div>
   )
