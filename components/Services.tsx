@@ -2,29 +2,52 @@
 
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
+import type { Service } from '@/lib/supabase'
+
+// Default fallback services
+const defaultServices = [
+  {
+    title: '24/7 Threat Detection & Rapid Response',
+    description: 'Advanced monitoring and protection via Microsoft Defender to keep your business safe around the clock.',
+  },
+  {
+    title: 'Advanced Email Protection',
+    description: 'Comprehensive phishing and spam filtering to protect your team from email-based threats and attacks.',
+  },
+  {
+    title: 'Staff Training',
+    description: 'Empower your team with security awareness training to stop cyber attacks before they happen.',
+  },
+]
 
 export default function Services() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [services, setServices] = useState(defaultServices)
 
-  const services = [
-    {
-      title: '24/7 Threat Detection & Rapid Response',
-      description:
-        'Advanced monitoring and protection via Microsoft Defender to keep your business safe around the clock.',
-    },
-    {
-      title: 'Advanced Email Protection',
-      description:
-        'Comprehensive phishing and spam filtering to protect your team from email-based threats and attacks.',
-    },
-    {
-      title: 'Staff Training',
-      description:
-        'Empower your team with security awareness training to stop cyber attacks before they happen.',
-    },
-  ]
+  useEffect(() => {
+    fetchServices()
+  }, [])
+
+  async function fetchServices() {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: true })
+
+      if (error) throw error
+      if (data && data.length > 0) {
+        setServices(data.map(s => ({ title: s.title, description: s.description })))
+      }
+    } catch (error) {
+      console.error('Error fetching services:', error)
+      // Keep using defaultServices
+    }
+  }
 
   return (
     <section

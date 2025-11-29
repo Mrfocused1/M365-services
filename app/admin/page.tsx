@@ -26,6 +26,7 @@ import FormSubmissionsViewer from '@/components/admin/FormSubmissionsViewer'
 import WhyChooseEditor from '@/components/admin/WhyChooseEditor'
 import NavigationEditor from '@/components/admin/NavigationEditor'
 import FooterEditor from '@/components/admin/FooterEditor'
+import ServicesEditor from '@/components/admin/ServicesEditor'
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState('dashboard')
@@ -38,6 +39,7 @@ export default function AdminDashboard() {
     { id: 'm365-features', label: 'M365 Partner Features', icon: Briefcase },
     { id: 'cloud-solutions', label: 'Cloud Solutions', icon: Cloud },
     { id: 'cybersecurity', label: 'Cybersecurity', icon: Shield },
+    { id: 'services', label: 'M365 Setup & Optimisation', icon: Settings },
     { id: 'why-choose', label: 'Why Choose Us', icon: FileText },
     { id: 'contact-info', label: 'Contact Information', icon: Phone },
     { id: 'form-submissions', label: 'Form Submissions', icon: Mail },
@@ -150,6 +152,7 @@ export default function AdminDashboard() {
             {activeSection === 'm365-features' && <M365FeaturesEditor />}
             {activeSection === 'cloud-solutions' && <CloudSolutionsEditor />}
             {activeSection === 'cybersecurity' && <CybersecurityEditor />}
+            {activeSection === 'services' && <ServicesEditor />}
             {activeSection === 'why-choose' && <WhyChooseEditor />}
             {activeSection === 'contact-info' && <ContactInfoEditor />}
             {activeSection === 'form-submissions' && <FormSubmissionsViewer />}
