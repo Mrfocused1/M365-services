@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import Link from 'next/link'
 import { Features } from './ui/features'
-import { Headphones, Cloud, Shield, GraduationCap } from 'lucide-react'
+import { Headphones, Cloud, Shield } from 'lucide-react'
 
 function Counter({ value, suffix = '', decimals = 0 }: { value: number; suffix?: string; decimals?: number }) {
   const [displayValue, setDisplayValue] = useState(0)
@@ -47,31 +47,31 @@ export default function AboutPreview() {
   const features = [
     {
       id: 1,
-      icon: Headphones,
-      title: '24/7 Support',
-      description: 'Round-the-clock assistance for all your IT needs. We\'re always here when you need us most.',
-      image: '/support.jpeg'
-    },
-    {
-      id: 2,
       icon: Cloud,
-      title: 'Cloud Migration',
-      description: 'Seamless transitions to the cloud with minimal downtime and maximum efficiency.',
+      title: 'Seamless Migration',
+      description: 'Move emails, files, and data from your old systems to Microsoft 365. Done in a way that avoids downtime, so your business keeps running.',
       image: '/cloud.jpeg'
     },
     {
-      id: 3,
+      id: 2,
       icon: Shield,
-      title: 'Security First',
-      description: 'Enterprise-grade protection keeping your business safe from cyber threats.',
-      image: '/security.jpeg'
+      title: 'M365 Setup & Domain Verification',
+      description: 'Set up Microsoft 365 accounts for your team. Connect and verify your business domain (so your email looks professional, e.g. yourname@yourcompany.com).',
+      image: '/support.jpeg'
+    },
+    {
+      id: 3,
+      icon: Headphones,
+      title: 'Teams, SharePoint & OneDrive Setup',
+      description: 'Configure Teams for chat, calls, and meetings. Set up SharePoint for document sharing and team sites. Configure OneDrive for personal file storage and access from anywhere.',
+      image: '/training.jpeg'
     },
     {
       id: 4,
-      icon: GraduationCap,
-      title: 'Training',
-      description: 'Empower your team with comprehensive training and ongoing support.',
-      image: '/training.jpeg'
+      icon: Shield,
+      title: 'Security & Compliance',
+      description: 'Apply Microsoft 365 security features (MFA, threat protection, encryption). Configure compliance settings to meet regulations (GDPR-ready). Protects your data and builds customer trust.',
+      image: '/security.jpeg'
     },
   ]
 
