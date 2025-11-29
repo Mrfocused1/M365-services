@@ -86,22 +86,28 @@ export default function HeroSection() {
         if (dbError) throw dbError
 
         // Create email body with all form information
-        const emailBody = `
-Hi M365 IT Services,
+        let emailBody = `Hi M365 IT Services,
 
 I would like to get in touch with you.
 
 Name: ${formData.name}
-Email: ${formData.email}
-${formData.phone ? `Phone: ${formData.phone}` : ''}
-${formData.company ? `Company: ${formData.company}` : ''}
+Email: ${formData.email}`
+
+        if (formData.phone) {
+          emailBody += `\nPhone: ${formData.phone}`
+        }
+
+        if (formData.company) {
+          emailBody += `\nCompany: ${formData.company}`
+        }
+
+        emailBody += `
 
 Message:
 ${formData.message}
 
 Best regards,
-${formData.name}
-        `.trim()
+${formData.name}`
 
         // Create mailto link
         const mailtoLink = `mailto:info@m365itservices.com?subject=Contact Form Submission from ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`
