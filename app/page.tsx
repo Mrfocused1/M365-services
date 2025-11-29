@@ -4,6 +4,7 @@ import HeroSection from '@/components/HeroSection'
 import WhyChoose from '@/components/WhyChoose'
 import AboutPreview from '@/components/AboutPreview'
 import CloudSolutions from '@/components/CloudSolutions'
+import CybersecurityProtection from '@/components/CybersecurityProtection'
 import Services from '@/components/Services'
 import Footer from '@/components/Footer'
 
@@ -16,6 +17,7 @@ export default function Home() {
       <WhyChoose />
       <AboutPreview />
       <CloudSolutions />
+      <CybersecurityProtection />
       <Services />
       <Footer />
     </main>
