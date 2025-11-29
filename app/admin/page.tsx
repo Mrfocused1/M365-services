@@ -23,6 +23,7 @@ import M365FeaturesEditor from '@/components/admin/M365FeaturesEditor'
 import CloudSolutionsEditor from '@/components/admin/CloudSolutionsEditor'
 import CybersecurityEditor from '@/components/admin/CybersecurityEditor'
 import FormSubmissionsViewer from '@/components/admin/FormSubmissionsViewer'
+import WhyChooseEditor from '@/components/admin/WhyChooseEditor'
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState('dashboard')
@@ -98,22 +99,17 @@ export default function AdminDashboard() {
         </AnimatePresence>
 
         {/* Sidebar */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            initial={false}
-            animate={{
-              x: mobileMenuOpen ? 0 : -280,
-            }}
-            className={`
-              fixed lg:sticky lg:translate-x-0
-              top-[73px] left-0
-              w-64 h-[calc(100vh-73px)]
-              bg-white border-r border-gray-200
-              z-40 overflow-y-auto
-              transition-transform duration-300 ease-in-out
-              lg:block
-            `}
-          >
+        <motion.div
+          className={`
+            fixed lg:static
+            top-[73px] lg:top-0 left-0
+            w-64 h-[calc(100vh-73px)] lg:h-auto
+            bg-white border-r border-gray-200
+            z-40 overflow-y-auto
+            transition-transform duration-300 ease-in-out
+            ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          `}
+        >
             <nav className="p-4">
               <ul className="space-y-1">
                 {menuItems.map((item) => {
@@ -136,8 +132,7 @@ export default function AdminDashboard() {
                 })}
               </ul>
             </nav>
-          </motion.div>
-        </AnimatePresence>
+        </motion.div>
 
         {/* Main Content */}
         <div className="flex-1 p-4 md:p-6 lg:p-8 w-full lg:ml-0">
@@ -153,7 +148,7 @@ export default function AdminDashboard() {
             {activeSection === 'm365-features' && <M365FeaturesEditor />}
             {activeSection === 'cloud-solutions' && <CloudSolutionsEditor />}
             {activeSection === 'cybersecurity' && <CybersecurityEditor />}
-            {activeSection === 'why-choose' && <div>Why Choose Us Editor (Coming Soon)</div>}
+            {activeSection === 'why-choose' && <WhyChooseEditor />}
             {activeSection === 'contact-info' && <ContactInfoEditor />}
             {activeSection === 'form-submissions' && <FormSubmissionsViewer />}
             {activeSection === 'media' && <div>Media Library (Coming Soon)</div>}

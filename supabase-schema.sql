@@ -74,6 +74,31 @@ CREATE TABLE why_choose_features (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Benefits (for Why Choose section)
+CREATE TABLE benefits (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  image_url TEXT,
+  position INTEGER NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Testimonials
+CREATE TABLE testimonials (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  author_name TEXT NOT NULL,
+  author_role TEXT NOT NULL,
+  author_company TEXT NOT NULL,
+  text TEXT NOT NULL,
+  position INTEGER NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Services (General Services Section)
 CREATE TABLE services (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -182,6 +207,8 @@ CREATE INDEX idx_m365_features_position ON m365_features(position);
 CREATE INDEX idx_cloud_solutions_position ON cloud_solutions(position);
 CREATE INDEX idx_cybersecurity_position ON cybersecurity_services(position);
 CREATE INDEX idx_why_choose_position ON why_choose_features(position);
+CREATE INDEX idx_benefits_position ON benefits(position);
+CREATE INDEX idx_testimonials_position ON testimonials(position);
 CREATE INDEX idx_footer_links_section ON footer_links(section, position);
 CREATE INDEX idx_form_submissions_created ON form_submissions(created_at DESC);
 CREATE INDEX idx_form_submissions_read ON form_submissions(is_read);
@@ -193,6 +220,8 @@ ALTER TABLE m365_features ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cloud_solutions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cybersecurity_services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE why_choose_features ENABLE ROW LEVEL SECURITY;
+ALTER TABLE benefits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_info ENABLE ROW LEVEL SECURITY;
 ALTER TABLE footer_content ENABLE ROW LEVEL SECURITY;
@@ -209,6 +238,8 @@ CREATE POLICY "Allow public read" ON m365_features FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON cloud_solutions FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON cybersecurity_services FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON why_choose_features FOR SELECT USING (true);
+CREATE POLICY "Allow public read" ON benefits FOR SELECT USING (true);
+CREATE POLICY "Allow public read" ON testimonials FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON services FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON contact_info FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON footer_content FOR SELECT USING (true);
@@ -223,6 +254,8 @@ CREATE POLICY "Allow all operations" ON m365_features FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON cloud_solutions FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON cybersecurity_services FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON why_choose_features FOR ALL USING (true);
+CREATE POLICY "Allow all operations" ON benefits FOR ALL USING (true);
+CREATE POLICY "Allow all operations" ON testimonials FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON services FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON contact_info FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON footer_content FOR ALL USING (true);

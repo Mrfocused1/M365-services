@@ -136,3 +136,26 @@ export type MediaItem = {
   used_in: string[] | null
   uploaded_at: string
 }
+
+export type Benefit = {
+  id: string
+  title: string
+  description: string
+  image_url: string | null
+  position: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type Testimonial = {
+  id: string
+  author_name: string
+  author_role: string
+  author_company: string
+  text: string
+  position: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
