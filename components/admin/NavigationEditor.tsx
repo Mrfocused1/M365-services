@@ -107,24 +107,29 @@ export default function NavigationEditor() {
 
       <div className="space-y-3">
         {items.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg border p-4 flex items-center gap-4">
-            <GripVertical className="w-5 h-5 text-gray-400" />
-            <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <span className="font-semibold text-gray-900">{item.label}</span>
-                <span className="text-sm text-gray-500">→ {item.href}</span>
-                <span className="text-xs bg-gray-100 px-2 py-1 rounded">#{item.position}</span>
+          <div key={item.id} className="bg-white rounded-lg border p-4">
+            <div className="flex items-start gap-3 mb-3">
+              <GripVertical className="w-5 h-5 text-gray-400 mt-1 hidden sm:block" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap mb-2">
+                  <span className="font-semibold text-gray-900">{item.label}</span>
+                  <span className="text-xs bg-gray-100 px-2 py-1 rounded whitespace-nowrap">#{item.position}</span>
+                  <button
+                    onClick={() => toggleActive(item.id, item.is_active)}
+                    className={`text-xs px-2 py-1 rounded ${item.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}
+                  >
+                    {item.is_active ? 'Active' : 'Hidden'}
+                  </button>
+                </div>
+                <p className="text-sm text-gray-500 break-all">→ {item.href}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => toggleActive(item.id, item.is_active)}
-                className={`px-3 py-1 text-xs rounded ${item.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}
-              >
-                {item.is_active ? 'Active' : 'Hidden'}
+            <div className="flex gap-2">
+              <button onClick={() => { setEditing(item); setShowModal(true) }} className="flex-1 sm:flex-none px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 text-sm font-medium">Edit</button>
+              <button onClick={() => handleDelete(item.id)} className="flex-1 sm:flex-none px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 flex items-center justify-center gap-2">
+                <Trash2 className="w-4 h-4" />
+                <span className="sm:hidden">Delete</span>
               </button>
-              <button onClick={() => { setEditing(item); setShowModal(true) }} className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">Edit</button>
-              <button onClick={() => handleDelete(item.id)} className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100"><Trash2 className="w-4 h-4" /></button>
             </div>
           </div>
         ))}
