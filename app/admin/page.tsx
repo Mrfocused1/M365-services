@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
   Home,
@@ -13,13 +13,20 @@ import {
   FileText,
   Mail,
   Image,
-  Settings
+  Settings,
+  Menu,
+  X
 } from 'lucide-react'
 import HeroEditor from '@/components/admin/HeroEditor'
 import ContactInfoEditor from '@/components/admin/ContactInfoEditor'
+import M365FeaturesEditor from '@/components/admin/M365FeaturesEditor'
+import CloudSolutionsEditor from '@/components/admin/CloudSolutionsEditor'
+import CybersecurityEditor from '@/components/admin/CybersecurityEditor'
+import FormSubmissionsViewer from '@/components/admin/FormSubmissionsViewer'
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState('dashboard')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -35,57 +42,105 @@ export default function AdminDashboard() {
     { id: 'footer', label: 'Footer', icon: Settings },
   ]
 
+  const handleSectionChange = (sectionId: string) => {
+    setActiveSection(sectionId)
+    setMobileMenuOpen(false)
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top Bar */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="px-6 py-4">
+        <div className="px-4 md:px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">M365 IT Services</span>
+            <div className="flex items-center gap-3">
+              {/* Mobile Menu Toggle */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6 text-gray-700" />
+                ) : (
+                  <Menu className="w-6 h-6 text-gray-700" />
+                )}
+              </button>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+            </div>
+            <div className="flex items-center gap-2 md:gap-4">
+              <span className="hidden md:block text-sm text-gray-600">M365 IT Services</span>
               <a
                 href="/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 bg-brand-sky text-white rounded-lg hover:bg-brand-sky/90 transition-colors text-sm font-medium"
+                className="px-3 md:px-4 py-2 bg-brand-sky text-white rounded-lg hover:bg-brand-sky/90 transition-colors text-sm font-medium"
               >
-                View Website
+                <span className="hidden sm:inline">View Website</span>
+                <span className="sm:hidden">View</span>
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex relative">
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            />
+          )}
+        </AnimatePresence>
+
         {/* Sidebar */}
-        <div className="w-64 bg-white border-r border-gray-200 min-h-screen sticky top-[73px] self-start">
-          <nav className="p-4">
-            <ul className="space-y-1">
-              {menuItems.map((item) => {
-                const Icon = item.icon
-                return (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => setActiveSection(item.id)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                        activeSection === item.id
-                          ? 'bg-brand-sky text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                      <span className="text-sm font-medium">{item.label}</span>
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          </nav>
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            initial={false}
+            animate={{
+              x: mobileMenuOpen ? 0 : -280,
+            }}
+            className={`
+              fixed lg:sticky lg:translate-x-0
+              top-[73px] left-0
+              w-64 h-[calc(100vh-73px)]
+              bg-white border-r border-gray-200
+              z-40 overflow-y-auto
+              transition-transform duration-300 ease-in-out
+              lg:block
+            `}
+          >
+            <nav className="p-4">
+              <ul className="space-y-1">
+                {menuItems.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <li key={item.id}>
+                      <button
+                        onClick={() => handleSectionChange(item.id)}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                          activeSection === item.id
+                            ? 'bg-brand-sky text-white'
+                            : 'text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span className="text-sm font-medium">{item.label}</span>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </nav>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Main Content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-4 md:p-6 lg:p-8 w-full lg:ml-0">
           <motion.div
             key={activeSection}
             initial={{ opacity: 0, y: 20 }}
@@ -95,12 +150,12 @@ export default function AdminDashboard() {
             {activeSection === 'dashboard' && <DashboardOverview />}
             {activeSection === 'hero' && <HeroEditor />}
             {activeSection === 'navigation' && <div>Navigation Menu Editor (Coming Soon)</div>}
-            {activeSection === 'm365-features' && <div>M365 Features Editor (Coming Soon)</div>}
-            {activeSection === 'cloud-solutions' && <div>Cloud Solutions Editor (Coming Soon)</div>}
-            {activeSection === 'cybersecurity' && <div>Cybersecurity Editor (Coming Soon)</div>}
+            {activeSection === 'm365-features' && <M365FeaturesEditor />}
+            {activeSection === 'cloud-solutions' && <CloudSolutionsEditor />}
+            {activeSection === 'cybersecurity' && <CybersecurityEditor />}
             {activeSection === 'why-choose' && <div>Why Choose Us Editor (Coming Soon)</div>}
             {activeSection === 'contact-info' && <ContactInfoEditor />}
-            {activeSection === 'form-submissions' && <div>Form Submissions (Coming Soon)</div>}
+            {activeSection === 'form-submissions' && <FormSubmissionsViewer />}
             {activeSection === 'media' && <div>Media Library (Coming Soon)</div>}
             {activeSection === 'footer' && <div>Footer Editor (Coming Soon)</div>}
           </motion.div>
