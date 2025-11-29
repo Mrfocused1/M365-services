@@ -22,7 +22,6 @@ import ContactInfoEditor from '@/components/admin/ContactInfoEditor'
 import M365FeaturesEditor from '@/components/admin/M365FeaturesEditor'
 import CloudSolutionsEditor from '@/components/admin/CloudSolutionsEditor'
 import CybersecurityEditor from '@/components/admin/CybersecurityEditor'
-import FormSubmissionsViewer from '@/components/admin/FormSubmissionsViewer'
 import WhyChooseEditor from '@/components/admin/WhyChooseEditor'
 import NavigationEditor from '@/components/admin/NavigationEditor'
 import FooterEditor from '@/components/admin/FooterEditor'
@@ -34,16 +33,14 @@ export default function AdminDashboard() {
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'hero', label: 'Hero Section', icon: Home },
     { id: 'navigation', label: 'Navigation Menu', icon: Navigation },
+    { id: 'hero', label: 'Hero Section', icon: Home },
+    { id: 'why-choose', label: 'Why Choose Us', icon: FileText },
     { id: 'm365-features', label: 'M365 Partner Features', icon: Briefcase },
     { id: 'cloud-solutions', label: 'Cloud Solutions', icon: Cloud },
     { id: 'cybersecurity', label: 'Cybersecurity', icon: Shield },
     { id: 'services', label: 'M365 Setup & Optimisation', icon: Settings },
-    { id: 'why-choose', label: 'Why Choose Us', icon: FileText },
     { id: 'contact-info', label: 'Contact Information', icon: Phone },
-    { id: 'form-submissions', label: 'Form Submissions', icon: Mail },
-    { id: 'media', label: 'Media Library', icon: Image },
     { id: 'footer', label: 'Footer', icon: Settings },
   ]
 
@@ -147,34 +144,17 @@ export default function AdminDashboard() {
             transition={{ duration: 0.3 }}
           >
             {activeSection === 'dashboard' && <DashboardOverview />}
-            {activeSection === 'hero' && <HeroEditor />}
             {activeSection === 'navigation' && <NavigationEditor />}
+            {activeSection === 'hero' && <HeroEditor />}
+            {activeSection === 'why-choose' && <WhyChooseEditor />}
             {activeSection === 'm365-features' && <M365FeaturesEditor />}
             {activeSection === 'cloud-solutions' && <CloudSolutionsEditor />}
             {activeSection === 'cybersecurity' && <CybersecurityEditor />}
             {activeSection === 'services' && <ServicesEditor />}
-            {activeSection === 'why-choose' && <WhyChooseEditor />}
             {activeSection === 'contact-info' && <ContactInfoEditor />}
-            {activeSection === 'form-submissions' && <FormSubmissionsViewer />}
-            {activeSection === 'media' && <MediaLibrary />}
             {activeSection === 'footer' && <FooterEditor />}
           </motion.div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function MediaLibrary() {
-  return (
-    <div>
-      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Media Library</h2>
-      <p className="text-gray-600 mb-6">Upload and manage images and videos for your website.</p>
-      <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-        <Image className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Media Library Coming Soon</h3>
-        <p className="text-gray-600 mb-4">Upload and manage images, videos, and other media files.</p>
-        <p className="text-sm text-gray-500">For now, you can reference images by URL in other editors.</p>
       </div>
     </div>
   )

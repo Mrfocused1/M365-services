@@ -6,17 +6,17 @@ import type { FooterContent, FooterLink, SocialLink } from '@/lib/supabase'
 import { Save, Loader2, Plus, Trash2, X } from 'lucide-react'
 
 export default function FooterEditor() {
-  const [activeTab, setActiveTab] = useState<'content' | 'links' | 'social'>('content')
+  const [activeTab, setActiveTab] = useState<'content' | 'links'>('content')
 
   return (
     <div>
       <div className="mb-6">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Footer</h2>
-        <p className="text-gray-600">Manage footer content, links, and social media.</p>
+        <p className="text-gray-600">Manage footer content and links.</p>
       </div>
 
       <div className="flex gap-2 mb-6 border-b border-gray-200">
-        {['content', 'links', 'social'].map((tab) => (
+        {['content', 'links'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab as any)}
@@ -31,7 +31,6 @@ export default function FooterEditor() {
 
       {activeTab === 'content' && <FooterContentEditor />}
       {activeTab === 'links' && <FooterLinksEditor />}
-      {activeTab === 'social' && <SocialLinksEditor />}
     </div>
   )
 }
