@@ -1,8 +1,34 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
+import type { ContactInfo } from '@/lib/supabase'
 
 export default function ContactBar() {
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null)
+
+  useEffect(() => {
+    fetchContactInfo()
+  }, [])
+
+  async function fetchContactInfo() {
+    try {
+      const { data, error } = await supabase
+        .from('contact_info')
+        .select('*')
+        .single()
+
+      if (error) throw error
+      setContactInfo(data)
+    } catch (error) {
+      console.error('Error fetching contact info:', error)
+    }
+  }
+
+  const phoneNumber = contactInfo?.phone_number || '020 4582 5950'
+  const phoneLink = phoneNumber.replace(/\s/g, '')
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -16,10 +42,10 @@ export default function ContactBar() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
-            href="tel:02045825950"
+            href={`tel:${phoneLink}`}
             className="text-white hover:text-gray-100 transition-colors font-medium"
           >
-            <span className="text-lg">020 4582 5950</span>
+            <span className="text-lg">{phoneNumber}</span>
           </motion.a>
         </div>
       </div>

@@ -1,9 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
+import type { HeroContent } from '@/lib/supabase'
 
 export default function HeroSection() {
+  const [heroContent, setHeroContent] = useState<HeroContent | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,8 +15,27 @@ export default function HeroSection() {
     message: '',
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [showExtraFields, setShowExtraFields] = useState(false)
+
+  useEffect(() => {
+    fetchHeroContent()
+  }, [])
+
+  async function fetchHeroContent() {
+    try {
+      const { data, error } = await supabase
+        .from('hero_content')
+        .select('*')
+        .single()
+
+      if (error) throw error
+      setHeroContent(data)
+    } catch (error) {
+      console.error('Error fetching hero content:', error)
+    }
+  }
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -43,25 +65,46 @@ export default function HeroSection() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (validateForm()) {
-      // In production, send data to your API endpoint
-      console.log('Form submitted:', formData)
-      setIsSubmitted(true)
+      setIsSubmitting(true)
 
-      // Reset form after 5 seconds
-      setTimeout(() => {
-        setIsSubmitted(false)
-        setFormData({
-          name: '',
-          email: '',
-          company: '',
-          phone: '',
-          message: '',
-        })
-      }, 5000)
+      try {
+        // Save to Supabase
+        const { error } = await supabase
+          .from('form_submissions')
+          .insert({
+            full_name: formData.name,
+            email: formData.email,
+            phone: formData.phone || null,
+            message: formData.message,
+            is_read: false
+          })
+
+        if (error) throw error
+
+        setIsSubmitted(true)
+
+        // Reset form after 5 seconds
+        setTimeout(() => {
+          setIsSubmitted(false)
+          setFormData({
+            name: '',
+            email: '',
+            company: '',
+            phone: '',
+            message: '',
+          })
+          setShowExtraFields(false)
+        }, 5000)
+      } catch (error) {
+        console.error('Error submitting form:', error)
+        alert('There was an error submitting your form. Please try again.')
+      } finally {
+        setIsSubmitting(false)
+      }
     }
   }
 
@@ -97,10 +140,10 @@ export default function HeroSection() {
             className="text-center w-full max-w-xl"
           >
             <h1 className="font-poppins text-2xl md:text-3xl font-bold text-black leading-tight mb-3">
-              Are you aware how useful IT M365 services can be for S&M size business?
+              {heroContent?.headline || 'Professional IT Services & Microsoft 365 Solutions'}
             </h1>
             <p className="text-base text-gray-600 font-normal">
-              Empowering small and medium businesses with scalable Microsoft 365 solutions.
+              {heroContent?.subheadline || 'Transform your business with expert IT support, cloud migration, and comprehensive M365 implementation'}
             </p>
           </motion.div>
 
@@ -281,13 +324,16 @@ export default function HeroSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 1.2 }}
                   type="submit"
-                  className="w-full bg-gradient-to-r from-brand-sky to-blue-600 text-white font-semibold py-3 text-sm rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl relative overflow-hidden group"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-brand-sky to-blue-600 text-white font-semibold py-3 text-sm rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Send Message
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                    {!isSubmitting && (
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    )}
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 </motion.button>
@@ -527,11 +573,10 @@ export default function HeroSection() {
             className="text-center mb-8 z-20 relative"
           >
             <h1 className="font-poppins text-2xl md:text-3xl lg:text-4xl font-bold text-black leading-tight mb-4">
-              Are you aware how useful IT M365 services can be for S&M size
-              business?
+              {heroContent?.headline || 'Professional IT Services & Microsoft 365 Solutions'}
             </h1>
             <p className="text-base md:text-lg text-gray-600 font-normal max-w-2xl mx-auto">
-              Empowering small and medium businesses with scalable Microsoft 365 solutions.
+              {heroContent?.subheadline || 'Transform your business with expert IT support, cloud migration, and comprehensive M365 implementation'}
             </p>
           </motion.div>
 
