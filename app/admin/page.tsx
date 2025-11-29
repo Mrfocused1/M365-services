@@ -1,0 +1,193 @@
+'use client'
+
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import {
+  LayoutDashboard,
+  Home,
+  Navigation,
+  Briefcase,
+  Shield,
+  Cloud,
+  Phone,
+  FileText,
+  Mail,
+  Image,
+  Settings
+} from 'lucide-react'
+import HeroEditor from '@/components/admin/HeroEditor'
+import ContactInfoEditor from '@/components/admin/ContactInfoEditor'
+
+export default function AdminDashboard() {
+  const [activeSection, setActiveSection] = useState('dashboard')
+
+  const menuItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'hero', label: 'Hero Section', icon: Home },
+    { id: 'navigation', label: 'Navigation Menu', icon: Navigation },
+    { id: 'm365-features', label: 'M365 Partner Features', icon: Briefcase },
+    { id: 'cloud-solutions', label: 'Cloud Solutions', icon: Cloud },
+    { id: 'cybersecurity', label: 'Cybersecurity', icon: Shield },
+    { id: 'why-choose', label: 'Why Choose Us', icon: FileText },
+    { id: 'contact-info', label: 'Contact Information', icon: Phone },
+    { id: 'form-submissions', label: 'Form Submissions', icon: Mail },
+    { id: 'media', label: 'Media Library', icon: Image },
+    { id: 'footer', label: 'Footer', icon: Settings },
+  ]
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Top Bar */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="px-6 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-600">M365 IT Services</span>
+              <a
+                href="/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-brand-sky text-white rounded-lg hover:bg-brand-sky/90 transition-colors text-sm font-medium"
+              >
+                View Website
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-64 bg-white border-r border-gray-200 min-h-screen sticky top-[73px] self-start">
+          <nav className="p-4">
+            <ul className="space-y-1">
+              {menuItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => setActiveSection(item.id)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                        activeSection === item.id
+                          ? 'bg-brand-sky text-white'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="text-sm font-medium">{item.label}</span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 p-8">
+          <motion.div
+            key={activeSection}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeSection === 'dashboard' && <DashboardOverview />}
+            {activeSection === 'hero' && <HeroEditor />}
+            {activeSection === 'navigation' && <div>Navigation Menu Editor (Coming Soon)</div>}
+            {activeSection === 'm365-features' && <div>M365 Features Editor (Coming Soon)</div>}
+            {activeSection === 'cloud-solutions' && <div>Cloud Solutions Editor (Coming Soon)</div>}
+            {activeSection === 'cybersecurity' && <div>Cybersecurity Editor (Coming Soon)</div>}
+            {activeSection === 'why-choose' && <div>Why Choose Us Editor (Coming Soon)</div>}
+            {activeSection === 'contact-info' && <ContactInfoEditor />}
+            {activeSection === 'form-submissions' && <div>Form Submissions (Coming Soon)</div>}
+            {activeSection === 'media' && <div>Media Library (Coming Soon)</div>}
+            {activeSection === 'footer' && <div>Footer Editor (Coming Soon)</div>}
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DashboardOverview() {
+  return (
+    <div>
+      <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Admin Dashboard</h2>
+      <p className="text-gray-600 mb-8">Manage all aspects of your M365 IT Services website from here.</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-blue-100 rounded-lg">
+              <Home className="w-6 h-6 text-brand-sky" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Hero Section</p>
+              <p className="text-2xl font-bold text-gray-900">1</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-purple-100 rounded-lg">
+              <Cloud className="w-6 h-6 text-purple-600" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Cloud Solutions</p>
+              <p className="text-2xl font-bold text-gray-900">7</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-green-100 rounded-lg">
+              <Shield className="w-6 h-6 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Security Services</p>
+              <p className="text-2xl font-bold text-gray-900">3</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-orange-100 rounded-lg">
+              <Mail className="w-6 h-6 text-orange-600" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600">Form Submissions</p>
+              <p className="text-2xl font-bold text-gray-900">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-brand-sky hover:bg-blue-50 transition-colors text-left">
+            <Home className="w-6 h-6 text-brand-sky mb-2" />
+            <p className="font-medium text-gray-900">Edit Hero Section</p>
+            <p className="text-sm text-gray-600">Update homepage headline and video</p>
+          </button>
+
+          <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-brand-sky hover:bg-blue-50 transition-colors text-left">
+            <Cloud className="w-6 h-6 text-brand-sky mb-2" />
+            <p className="font-medium text-gray-900">Manage Cloud Solutions</p>
+            <p className="text-sm text-gray-600">Add or edit cloud service offerings</p>
+          </button>
+
+          <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-brand-sky hover:bg-blue-50 transition-colors text-left">
+            <Phone className="w-6 h-6 text-brand-sky mb-2" />
+            <p className="font-medium text-gray-900">Update Contact Info</p>
+            <p className="text-sm text-gray-600">Change phone, email, or address</p>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
