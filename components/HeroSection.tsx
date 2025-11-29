@@ -85,24 +85,29 @@ export default function HeroSection() {
 
         if (dbError) throw dbError
 
-        // Send email notification
-        const emailResponse = await fetch('/api/send-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            company: formData.company,
-            message: formData.message,
-          }),
-        })
+        // Create email body with all form information
+        const emailBody = `
+Hi M365 IT Services,
 
-        if (!emailResponse.ok) {
-          console.error('Email send failed, but form was saved to database')
-        }
+I would like to get in touch with you.
+
+Name: ${formData.name}
+Email: ${formData.email}
+${formData.phone ? `Phone: ${formData.phone}` : ''}
+${formData.company ? `Company: ${formData.company}` : ''}
+
+Message:
+${formData.message}
+
+Best regards,
+${formData.name}
+        `.trim()
+
+        // Create mailto link
+        const mailtoLink = `mailto:info@m365itservices.com?subject=Contact Form Submission from ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`
+
+        // Open user's email client
+        window.location.href = mailtoLink
 
         setIsSubmitted(true)
 
