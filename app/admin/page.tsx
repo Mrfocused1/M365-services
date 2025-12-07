@@ -15,7 +15,13 @@ import {
   Image,
   Settings,
   Menu,
-  X
+  X,
+  Users,
+  Award,
+  MessageSquare,
+  Inbox,
+  Info,
+  BarChart3
 } from 'lucide-react'
 import HeroEditor from '@/components/admin/HeroEditor'
 import ContactInfoEditor from '@/components/admin/ContactInfoEditor'
@@ -26,6 +32,12 @@ import WhyChooseEditor from '@/components/admin/WhyChooseEditor'
 import NavigationEditor from '@/components/admin/NavigationEditor'
 import FooterEditor from '@/components/admin/FooterEditor'
 import ServicesEditor from '@/components/admin/ServicesEditor'
+import TeamEditor from '@/components/admin/TeamEditor'
+import BenefitsEditor from '@/components/admin/BenefitsEditor'
+import TestimonialsEditor from '@/components/admin/TestimonialsEditor'
+import FormSubmissionsViewer from '@/components/admin/FormSubmissionsViewer'
+import AboutEditor from '@/components/admin/AboutEditor'
+import StatsEditor from '@/components/admin/StatsEditor'
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState('dashboard')
@@ -35,13 +47,19 @@ export default function AdminDashboard() {
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'navigation', label: 'Navigation Menu', icon: Navigation },
     { id: 'hero', label: 'Hero Section', icon: Home },
+    { id: 'stats', label: 'Stats & Metrics', icon: BarChart3 },
     { id: 'why-choose', label: 'Why Choose Us', icon: FileText },
+    { id: 'benefits', label: 'Benefits Cards', icon: Award },
+    { id: 'testimonials', label: 'Testimonials', icon: MessageSquare },
     { id: 'm365-features', label: 'M365 Partner Features', icon: Briefcase },
     { id: 'cloud-solutions', label: 'Cloud Solutions', icon: Cloud },
     { id: 'cybersecurity', label: 'Cybersecurity', icon: Shield },
     { id: 'services', label: 'M365 Setup & Optimisation', icon: Settings },
+    { id: 'about', label: 'About Page', icon: Info },
+    { id: 'team', label: 'Meet the Team', icon: Users },
     { id: 'contact-info', label: 'Contact Information', icon: Phone },
     { id: 'footer', label: 'Footer', icon: Settings },
+    { id: 'form-submissions', label: 'Form Submissions', icon: Inbox },
   ]
 
   const handleSectionChange = (sectionId: string) => {
@@ -146,13 +164,19 @@ export default function AdminDashboard() {
             {activeSection === 'dashboard' && <DashboardOverview />}
             {activeSection === 'navigation' && <NavigationEditor />}
             {activeSection === 'hero' && <HeroEditor />}
+            {activeSection === 'stats' && <StatsEditor />}
             {activeSection === 'why-choose' && <WhyChooseEditor />}
+            {activeSection === 'benefits' && <BenefitsEditor />}
+            {activeSection === 'testimonials' && <TestimonialsEditor />}
             {activeSection === 'm365-features' && <M365FeaturesEditor />}
             {activeSection === 'cloud-solutions' && <CloudSolutionsEditor />}
             {activeSection === 'cybersecurity' && <CybersecurityEditor />}
             {activeSection === 'services' && <ServicesEditor />}
+            {activeSection === 'about' && <AboutEditor />}
+            {activeSection === 'team' && <TeamEditor />}
             {activeSection === 'contact-info' && <ContactInfoEditor />}
             {activeSection === 'footer' && <FooterEditor />}
+            {activeSection === 'form-submissions' && <FormSubmissionsViewer />}
           </motion.div>
         </div>
       </div>

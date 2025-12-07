@@ -99,6 +99,19 @@ CREATE TABLE testimonials (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Team Members (Meet the Team Section)
+CREATE TABLE team_members (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL,
+  title TEXT NOT NULL,
+  bio TEXT NOT NULL,
+  image_url TEXT,
+  position INTEGER NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Services (General Services Section)
 CREATE TABLE services (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -173,6 +186,77 @@ CREATE TABLE media_library (
   uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Section Settings (visibility toggles for sections)
+CREATE TABLE section_settings (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  section_key TEXT UNIQUE NOT NULL, -- 'team', 'testimonials', etc.
+  is_visible BOOLEAN DEFAULT true,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insert default section settings
+INSERT INTO section_settings (section_key, is_visible) VALUES
+  ('team', true);
+
+-- About Page Content
+CREATE TABLE about_content (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  hero_title TEXT NOT NULL DEFAULT 'Your Perfect IT M365 Partner',
+  hero_subtitle TEXT NOT NULL DEFAULT 'I help small and medium-sized businesses transform the way they work by making technology simple, secure, and productive.',
+  hero_description TEXT,
+  section_title TEXT DEFAULT 'Your Perfect IT M365 Partner',
+  section_subtitle TEXT DEFAULT 'We help small and medium-sized businesses transform the way they work by making technology simple, secure, and productive.',
+  cta_title TEXT DEFAULT 'Ready to Transform Your Business?',
+  cta_subtitle TEXT DEFAULT 'Let''s discuss how our M365 solutions can help you work smarter, safer, and more efficiently.',
+  cta_button_text TEXT DEFAULT 'Get Started Today',
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insert default about content
+INSERT INTO about_content (hero_title, hero_subtitle, hero_description) VALUES (
+  'Your Perfect IT M365 Partner',
+  'I help small and medium-sized businesses transform the way they work by making technology simple, secure, and productive.',
+  'From moving your emails and files to the cloud, to securing your business from cyber threats, to giving your team the tools they need to work from anywhere — I handle it all so you can focus on running your business, not your IT via M365 Services.'
+);
+
+-- Stats/Metrics Section
+CREATE TABLE site_stats (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  label TEXT NOT NULL,
+  value DECIMAL NOT NULL,
+  suffix TEXT DEFAULT '',
+  decimals INTEGER DEFAULT 0,
+  position INTEGER NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insert default stats
+INSERT INTO site_stats (label, value, suffix, decimals, position) VALUES
+  ('Happy Clients', 150, '+', 0, 1),
+  ('Uptime', 99.9, '%', 1, 2),
+  ('Support', 24, '/7', 0, 3);
+
+-- About Page Values (Client-Focused, Security First, etc.)
+CREATE TABLE about_values (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  icon_name TEXT NOT NULL,
+  position INTEGER NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Insert default values
+INSERT INTO about_values (title, description, icon_name, position) VALUES
+  ('Client-Focused', 'Your success is our priority. We tailor every solution to fit your unique business needs.', 'Users', 1),
+  ('Security First', 'Protecting your data and business with enterprise-grade security measures.', 'Shield', 2),
+  ('Cloud Experts', 'Specializing in Microsoft 365 cloud solutions that scale with your business.', 'Cloud', 3),
+  ('Always Available', '24/7 support to ensure your business never stops running smoothly.', 'HeartHandshake', 4);
+
 -- Insert default data for Hero Section
 INSERT INTO hero_content (headline, subheadline, video_url) VALUES (
   'Professional IT Services & Microsoft 365 Solutions',
@@ -209,6 +293,7 @@ CREATE INDEX idx_cybersecurity_position ON cybersecurity_services(position);
 CREATE INDEX idx_why_choose_position ON why_choose_features(position);
 CREATE INDEX idx_benefits_position ON benefits(position);
 CREATE INDEX idx_testimonials_position ON testimonials(position);
+CREATE INDEX idx_team_members_position ON team_members(position);
 CREATE INDEX idx_footer_links_section ON footer_links(section, position);
 CREATE INDEX idx_form_submissions_created ON form_submissions(created_at DESC);
 CREATE INDEX idx_form_submissions_read ON form_submissions(is_read);
@@ -222,6 +307,7 @@ ALTER TABLE cybersecurity_services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE why_choose_features ENABLE ROW LEVEL SECURITY;
 ALTER TABLE benefits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
+ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_info ENABLE ROW LEVEL SECURITY;
 ALTER TABLE footer_content ENABLE ROW LEVEL SECURITY;
@@ -229,6 +315,7 @@ ALTER TABLE footer_links ENABLE ROW LEVEL SECURITY;
 ALTER TABLE social_links ENABLE ROW LEVEL SECURITY;
 ALTER TABLE form_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE media_library ENABLE ROW LEVEL SECURITY;
+ALTER TABLE section_settings ENABLE ROW LEVEL SECURITY;
 
 -- Create policies to allow public read access and admin write access
 -- For public read access (everyone can read)
@@ -240,12 +327,14 @@ CREATE POLICY "Allow public read" ON cybersecurity_services FOR SELECT USING (tr
 CREATE POLICY "Allow public read" ON why_choose_features FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON benefits FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON testimonials FOR SELECT USING (true);
+CREATE POLICY "Allow public read" ON team_members FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON services FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON contact_info FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON footer_content FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON footer_links FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON social_links FOR SELECT USING (true);
 CREATE POLICY "Allow public read" ON media_library FOR SELECT USING (true);
+CREATE POLICY "Allow public read" ON section_settings FOR SELECT USING (true);
 
 -- For admin access (allow all operations from admin)
 CREATE POLICY "Allow all operations" ON hero_content FOR ALL USING (true);
@@ -256,6 +345,7 @@ CREATE POLICY "Allow all operations" ON cybersecurity_services FOR ALL USING (tr
 CREATE POLICY "Allow all operations" ON why_choose_features FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON benefits FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON testimonials FOR ALL USING (true);
+CREATE POLICY "Allow all operations" ON team_members FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON services FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON contact_info FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON footer_content FOR ALL USING (true);
@@ -263,3 +353,4 @@ CREATE POLICY "Allow all operations" ON footer_links FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON social_links FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON form_submissions FOR ALL USING (true);
 CREATE POLICY "Allow all operations" ON media_library FOR ALL USING (true);
+CREATE POLICY "Allow all operations" ON section_settings FOR ALL USING (true);

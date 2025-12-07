@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { Features } from './ui/features'
 import { Headphones, Cloud, Shield, Server, Lock, Users, Settings, Zap } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import type { M365Feature } from '@/lib/supabase'
+import type { M365Feature, SiteStat } from '@/lib/supabase'
 
 function Counter({ value, suffix = '', decimals = 0 }: { value: number; suffix?: string; decimals?: number }) {
   const [displayValue, setDisplayValue] = useState(0)
@@ -102,13 +102,21 @@ const defaultFeatures: M365Feature[] = [
   }
 ]
 
+const defaultStats = [
+  { value: 150, suffix: '+', label: 'Happy Clients', decimals: 0 },
+  { value: 99.9, suffix: '%', label: 'Uptime', decimals: 1 },
+  { value: 24, suffix: '/7', label: 'Support', decimals: 0 },
+]
+
 export default function AboutPreview() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [features, setFeatures] = useState<M365Feature[]>(defaultFeatures)
+  const [stats, setStats] = useState(defaultStats)
 
   useEffect(() => {
     fetchFeatures()
+    fetchStats()
   }, [])
 
   async function fetchFeatures() {
@@ -125,15 +133,30 @@ export default function AboutPreview() {
       }
     } catch (error) {
       console.error('Error fetching M365 features:', error)
-      // Keep using defaultFeatures on error
     }
   }
 
-  const stats = [
-    { value: 150, suffix: '+', label: 'Happy Clients', decimals: 0 },
-    { value: 99.9, suffix: '%', label: 'Uptime', decimals: 1 },
-    { value: 24, suffix: '/7', label: 'Support', decimals: 0 },
-  ]
+  async function fetchStats() {
+    try {
+      const { data, error } = await supabase
+        .from('site_stats')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true })
+
+      if (error) throw error
+      if (data && data.length > 0) {
+        setStats(data.map(s => ({
+          value: Number(s.value),
+          suffix: s.suffix || '',
+          label: s.label,
+          decimals: s.decimals
+        })))
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+    }
+  }
 
   return (
     <section ref={ref} className="section-spacing bg-white">

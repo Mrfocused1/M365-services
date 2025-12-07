@@ -1,8 +1,41 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
+import type { AboutContent } from '@/lib/supabase'
+
+const defaultContent = {
+  hero_title: 'Your Perfect IT M365 Partner',
+  hero_subtitle: 'I help small and medium-sized businesses transform the way they work by making technology simple, secure, and productive.',
+  hero_description: 'From moving your emails and files to the cloud, to securing your business from cyber threats, to giving your team the tools they need to work from anywhere — I handle it all so you can focus on running your business, not your IT via M365 Services.'
+}
 
 export default function AboutHero() {
+  const [content, setContent] = useState(defaultContent)
+
+  useEffect(() => {
+    async function fetchContent() {
+      try {
+        const { data, error } = await supabase
+          .from('about_content')
+          .select('*')
+          .single()
+
+        if (!error && data) {
+          setContent({
+            hero_title: data.hero_title || defaultContent.hero_title,
+            hero_subtitle: data.hero_subtitle || defaultContent.hero_subtitle,
+            hero_description: data.hero_description || defaultContent.hero_description
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching about content:', error)
+      }
+    }
+    fetchContent()
+  }, [])
+
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center pt-32 pb-20 bg-white overflow-hidden">
       {/* Background Pattern */}
@@ -29,11 +62,11 @@ export default function AboutHero() {
           </motion.div>
 
           <h1 className="font-poppins text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-8 leading-tight">
-            Your Perfect IT M365 Partner
+            {content.hero_title}
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-6">
-            I help small and medium-sized businesses transform the way they work by making technology simple, secure, and productive.
+            {content.hero_subtitle}
           </p>
 
           <motion.p
@@ -42,7 +75,7 @@ export default function AboutHero() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed"
           >
-            From moving your emails and files to the cloud, to securing your business from cyber threats, to giving your team the tools they need to work from anywhere — I handle it all so you can focus on running your business, not your IT via M365 Services.
+            {content.hero_description}
           </motion.p>
         </motion.div>
       </div>

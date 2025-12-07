@@ -159,3 +159,58 @@ export type Testimonial = {
   created_at: string
   updated_at: string
 }
+
+export type TeamMember = {
+  id: string
+  name: string
+  title: string
+  bio: string
+  image_url: string | null
+  position: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type SectionSettings = {
+  id: string
+  section_key: string
+  is_visible: boolean
+  updated_at: string
+}
+
+export type AboutContent = {
+  id: string
+  hero_title: string
+  hero_subtitle: string
+  hero_description: string | null
+  section_title: string | null
+  section_subtitle: string | null
+  cta_title: string | null
+  cta_subtitle: string | null
+  cta_button_text: string | null
+  updated_at: string
+}
+
+export type SiteStat = {
+  id: string
+  label: string
+  value: number
+  suffix: string | null
+  decimals: number
+  position: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type AboutValue = {
+  id: string
+  title: string
+  description: string
+  icon_name: string
+  position: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
