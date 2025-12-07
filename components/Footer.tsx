@@ -18,11 +18,28 @@ interface ContactInfo {
   address: string
 }
 
+interface FooterLink {
+  id: string
+  label: string
+  href: string
+  section: string
+  position: number
+}
+
+// Default quick links as fallback
+const defaultQuickLinks = [
+  { id: '1', label: 'Home', href: '/', section: 'quick', position: 1 },
+  { id: '2', label: 'Services', href: '/#services', section: 'quick', position: 2 },
+  { id: '3', label: 'About Us', href: '/about', section: 'quick', position: 3 },
+  { id: '4', label: 'Contact', href: '/#contact', section: 'quick', position: 4 },
+]
+
 export default function Footer() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [footerData, setFooterData] = useState<FooterData | null>(null)
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null)
+  const [quickLinks, setQuickLinks] = useState<FooterLink[]>(defaultQuickLinks)
 
   useEffect(() => {
     async function fetchData() {
@@ -44,6 +61,16 @@ export default function Footer() {
 
       if (contact) {
         setContactInfo(contact)
+      }
+
+      // Fetch footer links
+      const { data: links } = await supabase
+        .from('footer_links')
+        .select('*')
+        .order('position', { ascending: true })
+
+      if (links && links.length > 0) {
+        setQuickLinks(links)
       }
     }
 
@@ -88,24 +115,21 @@ export default function Footer() {
           >
             <h3 className="font-poppins font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              {(['Home', 'Services', 'About Us', 'Contact'] as const).map((item, index) => {
-                const hrefs: Record<string, string> = { 'Home': '/', 'Services': '/#services', 'About Us': '/about', 'Contact': '/#contact' }
-                return (
-                  <motion.li
-                    key={item}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+              {quickLinks.map((link, index) => (
+                <motion.li
+                  key={link.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+                >
+                  <Link
+                    href={link.href}
+                    className="text-gray-600 hover:text-brand-sky transition-colors"
                   >
-                    <Link
-                      href={hrefs[item]}
-                      className="text-gray-600 hover:text-brand-sky transition-colors"
-                    >
-                      {item}
-                    </Link>
-                  </motion.li>
-                )
-              })}
+                    {link.label}
+                  </Link>
+                </motion.li>
+              ))}
             </ul>
           </motion.div>
 

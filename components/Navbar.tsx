@@ -4,10 +4,27 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
+
+interface NavItem {
+  id: string
+  label: string
+  href: string
+  position: number
+}
+
+// Default nav items as fallback
+const defaultNavItems = [
+  { id: '1', label: 'Home', href: '/', position: 1 },
+  { id: '2', label: 'M365 Service', href: '/#services', position: 2 },
+  { id: '3', label: 'About Us', href: '/about', position: 3 },
+  { id: '4', label: 'Contact Us', href: '/#contact', position: 4 },
+]
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [navItems, setNavItems] = useState<NavItem[]>(defaultNavItems)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -18,12 +35,21 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const navItems = [
-    { name: 'Home', href: '/' },
-    { name: 'M365 Service', href: '/#services' },
-    { name: 'About Us', href: '/about' },
-    { name: 'Contact Us', href: '/#contact' },
-  ]
+  useEffect(() => {
+    async function fetchNavItems() {
+      const { data, error } = await supabase
+        .from('navigation_menu')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true })
+
+      if (!error && data && data.length > 0) {
+        setNavItems(data)
+      }
+    }
+
+    fetchNavItems()
+  }, [])
 
   return (
     <nav
@@ -50,7 +76,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => (
               <motion.div
-                key={item.name}
+                key={item.id}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 + index * 0.1, ease: "easeOut" }}
@@ -63,7 +89,7 @@ export default function Navbar() {
                       : 'text-black'
                   }`}
                 >
-                  {item.name}
+                  {item.label}
                 </Link>
               </motion.div>
             ))}
@@ -109,7 +135,7 @@ export default function Navbar() {
           >
             {navItems.map((item, index) => (
               <motion.div
-                key={item.name}
+                key={item.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
@@ -123,7 +149,7 @@ export default function Navbar() {
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item.name}
+                  {item.label}
                 </Link>
               </motion.div>
             ))}

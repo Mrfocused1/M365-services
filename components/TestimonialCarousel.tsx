@@ -2,25 +2,37 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { supabase } from '@/lib/supabase'
 
-const testimonials = [
+interface Testimonial {
+  id: string
+  author_name: string
+  author_role: string
+  company: string
+  quote: string
+}
+
+const defaultTestimonials = [
   {
-    name: 'Sarah L.',
-    role: 'Operations Director',
+    id: '1',
+    author_name: 'Sarah L.',
+    author_role: 'Operations Director',
     company: 'London Design Co.',
     quote:
       'M365 IT Services completely transformed how our remote team works — fast, secure, and seamless!',
   },
   {
-    name: 'James T.',
-    role: 'CEO',
+    id: '2',
+    author_name: 'James T.',
+    author_role: 'CEO',
     company: 'TechStart Solutions',
     quote:
       'Their expertise in Microsoft 365 helped us scale efficiently without the IT headaches. Highly recommended!',
   },
   {
-    name: 'Emma R.',
-    role: 'Managing Partner',
+    id: '3',
+    author_name: 'Emma R.',
+    author_role: 'Managing Partner',
     company: 'Brighton Consultancy',
     quote:
       'Finally, an IT partner that understands SMBs. Professional, responsive, and cost-effective.',
@@ -28,7 +40,24 @@ const testimonials = [
 ]
 
 export default function TestimonialCarousel() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials)
   const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    async function fetchTestimonials() {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('is_active', true)
+        .order('position', { ascending: true })
+
+      if (!error && data && data.length > 0) {
+        setTestimonials(data)
+      }
+    }
+
+    fetchTestimonials()
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,7 +65,9 @@ export default function TestimonialCarousel() {
     }, 5000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [testimonials.length])
+
+  if (testimonials.length === 0) return null
 
   return (
     <div className="relative h-64 sm:h-48">
@@ -54,10 +85,10 @@ export default function TestimonialCarousel() {
           </p>
           <div>
             <p className="font-poppins font-semibold text-black">
-              {testimonials[currentIndex].name}
+              {testimonials[currentIndex].author_name}
             </p>
             <p className="text-gray-600 text-sm">
-              {testimonials[currentIndex].role},{' '}
+              {testimonials[currentIndex].author_role},{' '}
               {testimonials[currentIndex].company}
             </p>
           </div>

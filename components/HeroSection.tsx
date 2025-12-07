@@ -7,6 +7,7 @@ import type { HeroContent } from '@/lib/supabase'
 
 export default function HeroSection() {
   const [heroContent, setHeroContent] = useState<HeroContent | null>(null)
+  const [contactEmail, setContactEmail] = useState('info@m365itservices.co.uk')
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,6 +22,7 @@ export default function HeroSection() {
 
   useEffect(() => {
     fetchHeroContent()
+    fetchContactEmail()
   }, [])
 
   async function fetchHeroContent() {
@@ -34,6 +36,21 @@ export default function HeroSection() {
       setHeroContent(data)
     } catch (error) {
       console.error('Error fetching hero content:', error)
+    }
+  }
+
+  async function fetchContactEmail() {
+    try {
+      const { data, error } = await supabase
+        .from('contact_info')
+        .select('email')
+        .single()
+
+      if (!error && data?.email) {
+        setContactEmail(data.email)
+      }
+    } catch (error) {
+      console.error('Error fetching contact email:', error)
     }
   }
 
@@ -110,7 +127,7 @@ Best regards,
 ${formData.name}`
 
         // Create mailto link
-        const mailtoLink = `mailto:itinfo@365pundits.com?subject=Contact Form Submission from ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`
+        const mailtoLink = `mailto:${contactEmail}?subject=Contact Form Submission from ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(emailBody)}`
 
         // Open user's email client
         window.location.href = mailtoLink
