@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { TeamMember } from '@/lib/supabase'
-import { Save, Loader2, Plus, Trash2, X, Users, Upload, Eye, EyeOff } from 'lucide-react'
+import { Save, Loader2, Plus, Trash2, X, Users, Eye, EyeOff } from 'lucide-react'
+import ImageUpload from './ImageUpload'
 
 export default function TeamEditor() {
   const [members, setMembers] = useState<TeamMember[]>([])
@@ -252,19 +253,12 @@ function TeamMemberModal({ member, onSave, onClose, saving }: { member: TeamMemb
             <label className="block text-sm font-medium mb-2">Bio *</label>
             <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={3} className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-sky focus:border-transparent" placeholder="Microsoft Certified Expert with 10+ years in cloud infrastructure..." required />
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Image URL</label>
-            <input type="text" value={form.image_url || ''} onChange={(e) => setForm({ ...form, image_url: e.target.value })} className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-sky focus:border-transparent" placeholder="/team1.jpeg or https://..." />
-            <p className="text-xs text-gray-500 mt-1">Enter an image URL or path (e.g., /team1.jpeg)</p>
-          </div>
-          {form.image_url && (
-            <div>
-              <label className="block text-sm font-medium mb-2">Preview</label>
-              <div className="w-32 h-32 rounded-lg overflow-hidden bg-gray-100">
-                <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
-              </div>
-            </div>
-          )}
+          <ImageUpload
+            value={form.image_url || ''}
+            onChange={(url) => setForm({ ...form, image_url: url })}
+            label="Profile Photo"
+            accept="image/*"
+          />
         </div>
         <div className="p-6 border-t flex gap-3 justify-end sticky bottom-0 bg-white">
           <button onClick={onClose} disabled={saving} className="px-6 py-3 border rounded-lg hover:bg-gray-50">Cancel</button>
