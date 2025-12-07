@@ -52,13 +52,27 @@ const defaultServices: CybersecurityService[] = [
   }
 ]
 
+interface SectionHeading {
+  title: string
+  description: string | null
+  cta_text: string | null
+  cta_link: string | null
+}
+
 export default function CybersecurityProtection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [protectionServices, setProtectionServices] = useState<CybersecurityService[]>(defaultServices)
+  const [heading, setHeading] = useState<SectionHeading>({
+    title: 'Cybersecurity Protection',
+    description: 'Comprehensive security services designed to protect and empower your business',
+    cta_text: 'Secure Your Business Today',
+    cta_link: '#contact'
+  })
 
   useEffect(() => {
     fetchServices()
+    fetchHeading()
   }, [])
 
   async function fetchServices() {
@@ -75,7 +89,22 @@ export default function CybersecurityProtection() {
       }
     } catch (error) {
       console.error('Error fetching cybersecurity services:', error)
-      // Keep using defaultServices on error
+    }
+  }
+
+  async function fetchHeading() {
+    try {
+      const { data, error } = await supabase
+        .from('section_headings')
+        .select('title, description, cta_text, cta_link')
+        .eq('section_key', 'cybersecurity')
+        .single()
+
+      if (!error && data) {
+        setHeading(data)
+      }
+    } catch (error) {
+      console.error('Error fetching heading:', error)
     }
   }
 
@@ -89,10 +118,10 @@ export default function CybersecurityProtection() {
           className="text-center mb-12 md:mb-16"
         >
           <h2 className="font-poppins text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6">
-            Cybersecurity Protection
+            {heading.title}
           </h2>
           <p className="text-base md:text-lg text-white/90 max-w-3xl mx-auto">
-            Comprehensive security services designed to protect and empower your business
+            {heading.description}
           </p>
         </motion.div>
 
@@ -131,11 +160,11 @@ export default function CybersecurityProtection() {
           className="text-center mt-12 md:mt-16"
         >
           <a
-            href="#contact"
+            href={heading.cta_link || '#contact'}
             className="inline-block bg-white text-brand-sky font-semibold px-8 md:px-10 py-3 md:py-4 text-sm md:text-base rounded-lg hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl group relative overflow-hidden"
           >
             <span className="relative z-10 flex items-center justify-center gap-2">
-              Secure Your Business Today
+              {heading.cta_text || 'Secure Your Business Today'}
               <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>

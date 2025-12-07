@@ -108,15 +108,29 @@ const defaultStats = [
   { value: 24, suffix: '/7', label: 'Support', decimals: 0 },
 ]
 
+interface SectionHeading {
+  title: string
+  description: string | null
+  cta_text: string | null
+  cta_link: string | null
+}
+
 export default function AboutPreview() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [features, setFeatures] = useState<M365Feature[]>(defaultFeatures)
   const [stats, setStats] = useState(defaultStats)
+  const [heading, setHeading] = useState<SectionHeading>({
+    title: 'Your Perfect IT M365 Partner',
+    description: 'We help small and medium-sized businesses transform the way they work by making technology simple, secure, and productive.',
+    cta_text: 'Meet the Team',
+    cta_link: '/about'
+  })
 
   useEffect(() => {
     fetchFeatures()
     fetchStats()
+    fetchHeading()
   }, [])
 
   async function fetchFeatures() {
@@ -158,6 +172,22 @@ export default function AboutPreview() {
     }
   }
 
+  async function fetchHeading() {
+    try {
+      const { data, error } = await supabase
+        .from('section_headings')
+        .select('title, description, cta_text, cta_link')
+        .eq('section_key', 'about_preview')
+        .single()
+
+      if (!error && data) {
+        setHeading(data)
+      }
+    } catch (error) {
+      console.error('Error fetching heading:', error)
+    }
+  }
+
   return (
     <section ref={ref} className="section-spacing bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -169,10 +199,10 @@ export default function AboutPreview() {
           className="text-center mb-12 md:mb-16"
         >
           <h2 className="font-poppins text-2xl md:text-4xl lg:text-5xl font-bold text-black mb-4 md:mb-6">
-            Your Perfect IT M365 Partner
+            {heading.title}
           </h2>
           <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-            We help small and medium-sized businesses transform the way they work by making technology simple, secure, and productive.
+            {heading.description}
           </p>
         </motion.div>
 
@@ -233,11 +263,11 @@ export default function AboutPreview() {
               From moving your emails and files to the cloud, to securing your business from cyber threats — we handle it all so you can focus on running your business, not your IT.
             </p>
             <Link
-              href="/about"
+              href={heading.cta_link || '/about'}
               className="inline-block bg-white text-brand-sky font-semibold px-6 md:px-8 py-3 md:py-4 text-sm md:text-base rounded-lg border-2 border-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl group"
             >
               <span className="flex items-center gap-2">
-                Meet the Team
+                {heading.cta_text || 'Meet the Team'}
                 <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

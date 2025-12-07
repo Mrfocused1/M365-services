@@ -21,7 +21,8 @@ import {
   MessageSquare,
   Inbox,
   Info,
-  BarChart3
+  BarChart3,
+  Type
 } from 'lucide-react'
 import HeroEditor from '@/components/admin/HeroEditor'
 import ContactInfoEditor from '@/components/admin/ContactInfoEditor'
@@ -38,6 +39,7 @@ import TestimonialsEditor from '@/components/admin/TestimonialsEditor'
 import FormSubmissionsViewer from '@/components/admin/FormSubmissionsViewer'
 import AboutEditor from '@/components/admin/AboutEditor'
 import StatsEditor from '@/components/admin/StatsEditor'
+import SectionHeadingsEditor from '@/components/admin/SectionHeadingsEditor'
 
 export default function AdminDashboard() {
   const [activeSection, setActiveSection] = useState('dashboard')
@@ -47,6 +49,7 @@ export default function AdminDashboard() {
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'navigation', label: 'Navigation Menu', icon: Navigation },
     { id: 'hero', label: 'Hero Section', icon: Home },
+    { id: 'section-headings', label: 'Section Headings', icon: Type },
     { id: 'stats', label: 'Stats & Metrics', icon: BarChart3 },
     { id: 'why-choose', label: 'Why Choose Us', icon: FileText },
     { id: 'benefits', label: 'Benefits Cards', icon: Award },
@@ -164,6 +167,7 @@ export default function AdminDashboard() {
             {activeSection === 'dashboard' && <DashboardOverview />}
             {activeSection === 'navigation' && <NavigationEditor />}
             {activeSection === 'hero' && <HeroEditor />}
+            {activeSection === 'section-headings' && <SectionHeadingsEditor />}
             {activeSection === 'stats' && <StatsEditor />}
             {activeSection === 'why-choose' && <WhyChooseEditor />}
             {activeSection === 'benefits' && <BenefitsEditor />}

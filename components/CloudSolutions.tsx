@@ -54,14 +54,37 @@ const defaultSolutions: CloudSolution[] = [
   }
 ]
 
+interface SectionHeading {
+  title: string
+  description: string | null
+  cta_text: string | null
+  cta_link: string | null
+}
+
+interface ITSupportHeading {
+  title: string
+  description: string | null
+}
+
 export default function CloudSolutions() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [openIndex, setOpenIndex] = useState<number | null>(0)
   const [solutions, setSolutions] = useState<CloudSolution[]>(defaultSolutions)
+  const [heading, setHeading] = useState<SectionHeading>({
+    title: 'Cloud Computing Solutions',
+    description: 'Comprehensive cloud services to keep your business running securely and efficiently.',
+    cta_text: 'Get Started with Cloud Solutions',
+    cta_link: '#contact'
+  })
+  const [itSupport, setItSupport] = useState<ITSupportHeading>({
+    title: 'IT Support & Maintenance',
+    description: 'Fast and friendly helpdesk support for your staff via Quick Assist or Remote Desktop Protocol'
+  })
 
   useEffect(() => {
     fetchSolutions()
+    fetchHeadings()
   }, [])
 
   async function fetchSolutions() {
@@ -78,7 +101,34 @@ export default function CloudSolutions() {
       }
     } catch (error) {
       console.error('Error fetching cloud solutions:', error)
-      // Keep using defaultSolutions on error
+    }
+  }
+
+  async function fetchHeadings() {
+    try {
+      // Fetch cloud solutions heading
+      const { data: cloudData } = await supabase
+        .from('section_headings')
+        .select('title, description, cta_text, cta_link')
+        .eq('section_key', 'cloud_solutions')
+        .single()
+
+      if (cloudData) {
+        setHeading(cloudData)
+      }
+
+      // Fetch IT support heading
+      const { data: supportData } = await supabase
+        .from('section_headings')
+        .select('title, description')
+        .eq('section_key', 'it_support')
+        .single()
+
+      if (supportData) {
+        setItSupport(supportData)
+      }
+    } catch (error) {
+      console.error('Error fetching headings:', error)
     }
   }
 
@@ -97,10 +147,10 @@ export default function CloudSolutions() {
           className="text-center mb-12 md:mb-16"
         >
           <h2 className="font-poppins text-2xl md:text-4xl lg:text-5xl font-bold text-black mb-4 md:mb-6">
-            Cloud Computing Solutions
+            {heading.title}
           </h2>
           <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-            Comprehensive cloud services to keep your business running securely and efficiently.
+            {heading.description}
           </p>
         </motion.div>
 
@@ -167,10 +217,10 @@ export default function CloudSolutions() {
         >
           <div className="bg-brand-sky/5 backdrop-blur-xl rounded-2xl p-6 md:p-8 border border-brand-sky/20 inline-block">
             <h3 className="font-poppins text-lg md:text-xl font-bold text-black mb-3">
-              IT Support & Maintenance
+              {itSupport.title}
             </h3>
             <p className="text-sm md:text-base text-gray-600 max-w-2xl">
-              Fast and friendly helpdesk support for your staff via Quick Assist or Remote Desktop Protocol
+              {itSupport.description}
             </p>
           </div>
         </motion.div>
@@ -183,11 +233,11 @@ export default function CloudSolutions() {
           className="text-center mt-8 md:mt-12"
         >
           <a
-            href="#contact"
+            href={heading.cta_link || '#contact'}
             className="inline-block bg-brand-sky text-white font-semibold px-8 md:px-10 py-3 md:py-4 text-sm md:text-base rounded-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl group"
           >
             <span className="flex items-center gap-2">
-              Get Started with Cloud Solutions
+              {heading.cta_text || 'Get Started with Cloud Solutions'}
               <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>

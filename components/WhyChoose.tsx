@@ -58,12 +58,25 @@ const defaultTestimonials = [
   },
 ]
 
+interface SectionHeading {
+  title: string
+  description: string | null
+}
+
 export default function WhyChoose() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
   const [benefits, setBenefits] = useState(defaultBenefits)
   const [testimonials, setTestimonials] = useState(defaultTestimonials)
   const [showTestimonials, setShowTestimonials] = useState(true)
+  const [whyChooseHeading, setWhyChooseHeading] = useState<SectionHeading>({
+    title: 'Why choose M365 IT Services for your business?',
+    description: 'All in one tool — Email, Teams, Office Apps, Storage, Strong Security, and Easy Collaboration.'
+  })
+  const [testimonialsHeading, setTestimonialsHeading] = useState<SectionHeading>({
+    title: 'What Our Clients Say',
+    description: 'Trusted by businesses across the UK'
+  })
 
   useEffect(() => {
     fetchData()
@@ -104,19 +117,40 @@ export default function WhyChoose() {
         })))
       }
 
+      // Fetch Why Choose heading
+      const { data: whyChooseData } = await supabase
+        .from('section_headings')
+        .select('title, description')
+        .eq('section_key', 'why_choose')
+        .single()
+
+      if (whyChooseData) {
+        setWhyChooseHeading(whyChooseData)
+      }
+
+      // Fetch Testimonials heading
+      const { data: testimonialsHeadingData } = await supabase
+        .from('section_headings')
+        .select('title, description')
+        .eq('section_key', 'testimonials')
+        .single()
+
+      if (testimonialsHeadingData) {
+        setTestimonialsHeading(testimonialsHeadingData)
+      }
+
       // Check if testimonials section should be visible
-      // We'll store this in a settings table or use a simple flag
       const { data: settingsData } = await supabase
-        .from('site_settings')
-        .select('show_testimonials')
+        .from('section_settings')
+        .select('is_visible')
+        .eq('section_key', 'testimonials')
         .single()
 
       if (settingsData) {
-        setShowTestimonials(settingsData.show_testimonials ?? true)
+        setShowTestimonials(settingsData.is_visible ?? true)
       }
     } catch (error) {
       console.error('Error fetching Why Choose data:', error)
-      // Keep using defaults
     }
   }
 
@@ -130,11 +164,10 @@ export default function WhyChoose() {
           className="text-center mb-12 md:mb-16"
         >
           <h2 className="font-poppins text-2xl md:text-4xl lg:text-5xl font-bold text-black mb-4 md:mb-6">
-            Why choose M365 IT Services for your business?
+            {whyChooseHeading.title}
           </h2>
           <p className="text-base md:text-lg text-gray-600 max-w-4xl mx-auto">
-            All in one tool — Email, Teams, Office Apps, Storage, Strong Security,
-            and Easy Collaboration.
+            {whyChooseHeading.description}
           </p>
         </motion.div>
 
@@ -169,8 +202,8 @@ export default function WhyChoose() {
       {/* Testimonials Marquee Section - Conditionally Rendered */}
       {showTestimonials && testimonials.length > 0 && (
         <TestimonialsSection
-          title="What Our Clients Say"
-          description="Trusted by businesses across the UK"
+          title={testimonialsHeading.title}
+          description={testimonialsHeading.description || ''}
           testimonials={testimonials}
           className="mt-10 md:mt-20"
         />
