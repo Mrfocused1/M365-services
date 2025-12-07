@@ -3,11 +3,60 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
+
+interface FooterData {
+  company_name: string
+  tagline: string
+  copyright_text: string
+}
+
+interface ContactInfo {
+  phone: string
+  email: string
+  address: string
+}
 
 export default function Footer() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [footerData, setFooterData] = useState<FooterData | null>(null)
+  const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null)
+
+  useEffect(() => {
+    async function fetchData() {
+      // Fetch footer content
+      const { data: footerContent } = await supabase
+        .from('footer_content')
+        .select('*')
+        .single()
+
+      if (footerContent) {
+        setFooterData(footerContent)
+      }
+
+      // Fetch contact info
+      const { data: contact } = await supabase
+        .from('contact_info')
+        .select('*')
+        .single()
+
+      if (contact) {
+        setContactInfo(contact)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  // Default values if database hasn't loaded yet
+  const companyName = footerData?.company_name || 'M365 IT Services'
+  const tagline = footerData?.tagline || 'Empowering businesses through Microsoft 365'
+  const copyrightText = footerData?.copyright_text || `© ${new Date().getFullYear()} M365 IT SERVICES. All rights reserved.`
+  const phone = contactInfo?.phone || '020 4582 5950'
+  const email = contactInfo?.email || 'info@m365itservices.co.uk'
+  const address = contactInfo?.address || 'London, UK'
 
   return (
     <footer ref={ref} className="bg-gradient-to-b from-white to-gray-50 text-black py-12 border-t border-gray-200">
@@ -22,12 +71,12 @@ export default function Footer() {
             <div className="mb-4">
               <img
                 src="/Logo.svg"
-                alt="M365 IT Services"
+                alt={companyName}
                 className="h-10 w-auto"
               />
             </div>
             <p className="text-gray-600 text-sm">
-              Empowering businesses through Microsoft 365
+              {tagline}
             </p>
           </motion.div>
 
@@ -75,10 +124,10 @@ export default function Footer() {
                 className="text-gray-600"
               >
                 <a
-                  href="tel:02045825950"
+                  href={`tel:${phone.replace(/\s/g, '')}`}
                   className="hover:text-brand-sky transition-colors"
                 >
-                  020 4582 5950
+                  {phone}
                 </a>
               </motion.li>
               <motion.li
@@ -88,10 +137,10 @@ export default function Footer() {
                 className="text-gray-600"
               >
                 <a
-                  href="mailto:info@m365itservices.co.uk"
+                  href={`mailto:${email}`}
                   className="hover:text-brand-sky transition-colors"
                 >
-                  info@m365itservices.co.uk
+                  {email}
                 </a>
               </motion.li>
               <motion.li
@@ -100,7 +149,7 @@ export default function Footer() {
                 transition={{ duration: 0.3, delay: 0.9 }}
                 className="text-gray-600"
               >
-                <span>London, UK</span>
+                <span>{address}</span>
               </motion.li>
             </ul>
           </motion.div>
@@ -113,7 +162,7 @@ export default function Footer() {
           className="border-t border-gray-200 mt-8 pt-8 text-center"
         >
           <p className="text-gray-600 text-sm">
-            © {new Date().getFullYear()} M365 IT SERVICES. All rights reserved.
+            {copyrightText}
           </p>
         </motion.div>
       </div>
